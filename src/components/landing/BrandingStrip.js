@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function BrandingStrip({ branding }) {
   if (!branding) {
@@ -16,7 +16,7 @@ function BrandingStrip({ branding }) {
             className="branding-strip__logo"
             src={resolveAssetPath(logo.src)}
             alt={logo.alt || 'Brand logo'}
-            loading="lazy"
+            {...getImageLoadingProps({ aboveFold: true })}
           />
         )}
 
@@ -33,7 +33,7 @@ function BrandingStrip({ branding }) {
             <img
               src={resolveAssetPath(reviewBadge.image)}
               alt={reviewBadge.alt || 'Rating badge'}
-              loading="lazy"
+              {...getImageLoadingProps({ aboveFold: true })}
             />
             <span>{reviewBadge.ratingLabel}</span>
             <span>{reviewBadge.reviewCountLabel}</span>

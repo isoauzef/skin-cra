@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, isExternalUrl } from './utils';
+import { resolveAssetPath, isExternalUrl, getImageLoadingProps } from './utils';
 
 function IngredientsSection({ ingredients, onCtaClick }) {
   if (!ingredients) {
@@ -29,7 +29,7 @@ function IngredientsSection({ ingredients, onCtaClick }) {
             <img
               src={resolveAssetPath(primaryCard.image.src)}
               alt={primaryCard.image.alt || primaryCard.name}
-              loading="lazy"
+              {...getImageLoadingProps()}
             />
           )}
         </aside>

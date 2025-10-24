@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function TestimonialsSection({ testimonials }) {
   if (!testimonials) {
@@ -22,7 +22,7 @@ function TestimonialsSection({ testimonials }) {
               <img
                 src={resolveAssetPath(card.image.src)}
                 alt={card.image.alt || card.name}
-                loading="lazy"
+                {...getImageLoadingProps()}
               />
             )}
             <div className="testimonials__meta">

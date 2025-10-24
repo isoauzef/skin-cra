@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function ScienceCallout({ scienceCallout }) {
   if (!scienceCallout) {
@@ -21,7 +21,7 @@ function ScienceCallout({ scienceCallout }) {
               key={image.src}
               src={resolveAssetPath(image.src)}
               alt={image.alt || title}
-              loading="lazy"
+              {...getImageLoadingProps()}
             />
           ))}
         </div>

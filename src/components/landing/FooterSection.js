@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, isExternalUrl } from './utils';
+import { resolveAssetPath, isExternalUrl, getImageLoadingProps } from './utils';
 
 function FooterSection({ footer }) {
   if (!footer) {
@@ -50,7 +50,7 @@ function FooterSection({ footer }) {
             className="landing-footer__payment"
             src={resolveAssetPath(paymentImage.src)}
             alt={paymentImage.alt || 'Payment methods'}
-            loading="lazy"
+            {...getImageLoadingProps()}
           />
         )}
       </div>

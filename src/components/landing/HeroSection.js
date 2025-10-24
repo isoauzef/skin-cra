@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, isExternalUrl } from './utils';
+import { resolveAssetPath, isExternalUrl, getImageLoadingProps } from './utils';
 
 function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
   if (!hero) {
@@ -96,7 +96,7 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
                         <img
                           src={resolveAssetPath(badge.src)}
                           alt={badge.alt || badge.label}
-                          loading="lazy"
+                          {...getImageLoadingProps({ aboveFold: true })}
                         />
                       )}
                       {badge.label && <span>{badge.label}</span>}
@@ -111,7 +111,7 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
                       className="hero__payment"
                       src={resolveAssetPath(paymentImage.src)}
                       alt={paymentImage.alt || 'Payment methods'}
-                      loading="lazy"
+                      {...getImageLoadingProps({ aboveFold: true })}
                     />
                   )}
 
@@ -120,7 +120,7 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
                       <img
                         src={resolveAssetPath(reviewHighlightImage.src)}
                         alt={reviewHighlightImage.alt || 'Customer reviews'}
-                        loading="lazy"
+                        {...getImageLoadingProps({ aboveFold: true })}
                       />
                       {reviewHighlightImage.label && <span>{reviewHighlightImage.label}</span>}
                     </div>
@@ -138,7 +138,7 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
                 className="hero__product"
                 src={resolveAssetPath(productImage.src)}
                 alt={productImage.alt || 'Featured product'}
-                loading="lazy"
+                {...getImageLoadingProps({ aboveFold: true })}
               />
             )}
 
@@ -148,7 +148,7 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
                   <img
                     src={resolveAssetPath(testimonial.avatar)}
                     alt={testimonial.name ? `${testimonial.name} testimonial` : 'Customer testimonial'}
-                    loading="lazy"
+                    {...getImageLoadingProps({ aboveFold: true })}
                   />
                 )}
                 <blockquote>

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function BenefitsSection({ benefits }) {
   if (!benefits) {
@@ -22,7 +22,7 @@ function BenefitsSection({ benefits }) {
               <img
                 src={resolveAssetPath(item.image.src)}
                 alt={item.image.alt || item.title}
-                loading="lazy"
+                {...getImageLoadingProps()}
               />
             )}
             <p className="benefits__title">{item.title}</p>

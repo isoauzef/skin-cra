@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function ProductClaimsSection({ productClaims }) {
   if (!productClaims) {
@@ -29,7 +29,7 @@ function ProductClaimsSection({ productClaims }) {
           className="claims__image"
           src={resolveAssetPath(supportingImage.src)}
           alt={supportingImage.alt || title}
-          loading="lazy"
+          {...getImageLoadingProps()}
         />
       )}
     </section>

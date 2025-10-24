@@ -55,3 +55,11 @@ export function updateFavicon(src) {
     link.href = resolvedHref;
   }
 }
+
+export function getImageLoadingProps({ aboveFold = false } = {}) {
+  if (aboveFold) {
+    return { loading: 'eager', decoding: 'auto' };
+  }
+
+  return { loading: 'lazy', decoding: 'async' };
+}

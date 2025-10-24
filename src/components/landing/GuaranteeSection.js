@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function GuaranteeSection({ guarantee }) {
   if (!guarantee) {
@@ -25,7 +25,7 @@ function GuaranteeSection({ guarantee }) {
           className="guarantee__image"
           src={resolveAssetPath(image.src)}
           alt={image.alt || headline}
-          loading="lazy"
+          {...getImageLoadingProps()}
         />
       )}
     </section>

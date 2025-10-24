@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function HowToUseSection({ howToUse }) {
   if (!howToUse) {
@@ -28,7 +28,7 @@ function HowToUseSection({ howToUse }) {
                     <img
                       src={resolveAssetPath(step.image.src)}
                       alt={step.image.alt || step.label}
-                      loading="lazy"
+                      {...getImageLoadingProps()}
                     />
                   )}
                   <div>
@@ -45,7 +45,7 @@ function HowToUseSection({ howToUse }) {
             className="how-to__animation"
             src={resolveAssetPath(animation.src)}
             alt={animation.alt || title}
-            loading="lazy"
+            {...getImageLoadingProps()}
           />
         )}
       </div>

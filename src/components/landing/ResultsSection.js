@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath } from './utils';
+import { resolveAssetPath, getImageLoadingProps } from './utils';
 
 function ResultsSection({ results }) {
   if (!results) {
@@ -25,7 +25,7 @@ function ResultsSection({ results }) {
               <img
                 src={resolveAssetPath(story.image.src)}
                 alt={story.image.alt || story.name}
-                loading="lazy"
+                {...getImageLoadingProps()}
               />
             )}
             <blockquote>{story.quote}</blockquote>
