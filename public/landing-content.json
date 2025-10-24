@@ -1,0 +1,486 @@
+﻿{
+  "branding": {
+    "logo": {
+      "src": "",
+      "alt": ""
+    },
+    "favicon": {
+      "src": "/uploads/steps1-1761295663546-806688200.png",
+      "alt": "Website favicon"
+    },
+    "saleBanners": [
+      {
+        "id": "sale",
+        "message": "AUTUMN SALE: Up to 70% Off & FREE Shipping Today ONLY!"
+      }
+    ],
+    "reviewBadge": {
+      "image": "/uploads/stars-1761289308662-495819885.png",
+      "alt": "4.9 star rating badge",
+      "ratingLabel": "4.9 / 5.0",
+      "reviewCountLabel": "(1,768 Reviews)"
+    }
+  },
+  "hero": {
+    "headline": "5in1 facial serum",
+    "subheadline": "For visibly firmer and radiant skin in just 2 weeks",
+    "description": "5in1 Facial Serum is like a non-invasive face lift that gives you a youthful glow and visibly reduces fine lines and wrinkles. It transforms dry, sun-damaged skin into a younger, more even complexion in just a few weeks.",
+    "bullets": [
+      "Enjoy a perfect skin tone",
+      "Smooth, youthful skin that lasts",
+      "Regain your self-confidence and beauty"
+    ],
+    "cta": {
+      "label": "TRY 5IN1 FACIAL SERUM NOW",
+      "href": "#"
+    },
+    "secondaryCta": {
+      "label": "",
+      "href": ""
+    },
+    "guarantee": {
+      "tagline": "Available online only | While supplies last",
+      "supportingCopy": "Free Shipping & 90 Day Money-Back Guarantee"
+    },
+    "productImage": {
+      "src": "/uploads/hero-1761288826063-307964706.png",
+      "alt": "5in1 Facial Serum"
+    },
+    "badgeImages": [
+      {
+        "src": "/uploads/leaves-1761288892560-909548744.png",
+        "alt": "100 percent pure badge",
+        "label": "100% pure and natural"
+      },
+      {
+        "src": "/uploads/beauty-1761289395853-30110549.png",
+        "alt": "Immediate effect badge",
+        "label": "Immediate effect"
+      },
+      {
+        "src": "/uploads/hairdresser-1761289390826-932736472.png",
+        "alt": "All skin types badge",
+        "label": "For all skin types"
+      }
+    ],
+    "paymentImage": {
+      "src": "/uploads/payment-1761289418506-927969935.png",
+      "alt": "Accepted payment methods"
+    },
+    "testimonial": {
+      "name": "Susan E.",
+      "rating": 5,
+      "quote": "\"With such offers I have often been disappointed. But after the shortest time the skin is firmer, more radiant, and my wrinkles no longer feel so deep. I am curious how it will feel after taking the serum for a longer time.\"",
+      "avatar": "/uploads/woman1-1761290011105-77563879.png"
+    },
+    "reviewHighlightImage": {
+      "src": "/uploads/review-1761290044298-24994727.png",
+      "alt": "1765 plus trusted customer reviews badge",
+      "label": "1,765+ Trusted customer reviews"
+    },
+    "stripeCheckoutEnabled": true
+  },
+  "benefits": {
+    "title": "Helps to reduce...",
+    "items": [
+      {
+        "title": "Fine lines and wrinkles",
+        "description": "Argireline stimulates collagen and reduces fine lines and wrinkles.",
+        "image": {
+          "src": "assets/img/a.jpg",
+          "alt": "Close-up of smooth skin"
+        }
+      },
+      {
+        "title": "Dry and pale skin",
+        "description": "Botulinum toxin, collagen peptides, and antioxidants moisturize and nourish your skin.",
+        "image": {
+          "src": "assets/img/b.png",
+          "alt": "Hydrated skin illustration"
+        }
+      },
+      {
+        "title": "Uneven skin tone",
+        "description": "Peptides promote exfoliation and regeneration to reduce hyperpigmentation for a more even tone.",
+        "image": {
+          "src": "assets/img/c.jpg",
+          "alt": "Even skin tone illustration"
+        }
+      }
+    ]
+  },
+  "scienceCallout": {
+    "title": "You can feel like yourself again",
+    "body": "Doctors uncovered that women who used the serum were able to reverse 60 percent of wrinkles, bumps, and sagging skin in the first month. With continued use for up to three months they reversed more than 95 percent of sagging skin and wrinkles.",
+    "images": [
+      {
+        "src": "assets/img/before.png",
+        "alt": "Before and after comparison 1"
+      },
+      {
+        "src": "assets/img/stats.png",
+        "alt": "Smiling woman after treatment"
+      }
+    ]
+  },
+  "ingredients": {
+    "title": "Clinically Proven Ingredients",
+    "subtitle": "Results you can see immediately, with confidence that lasts a lifetime.",
+    "cards": [
+      {
+        "name": "Botulinum toxin",
+        "description": "This 5-in-1 Vitamin C Face Serum is formulated with natural ingredients like Vitamin C, Hyaluronic Acid, Niacinamide, and Collagen, offering anti-aging, whitening, moisturizing, and pore-shrinking benefits. Suitable for all skin types, it targets face, neck, hands, and body, providing rejuvenating and firming effects.",
+        "image": {
+          "src": "assets/img/5-img.png",
+          "alt": "Botulinum toxin ingredient"
+        }
+      }
+    ],
+    "cta": {
+      "label": "Try 5in1 Facial Serum",
+      "href": "#"
+    },
+    "ctaSupportCopy": "Try now with a 90 Day Money-Back Guarantee. All transactions are secured and encrypted."
+  },
+  "results": {
+    "title": "Verified customer results",
+    "intro": "Real women share their journeys to smoother, more youthful skin.",
+    "stories": [
+      {
+        "name": "Barbara E.",
+        "quote": "After just a few weeks my wrinkles began to fade and my skin became noticeably firmer and more radiant. I finally feel comfortable in my skin again!",
+        "image": {
+          "src": "assets/img/ba1.png",
+          "alt": "Barbara after using serum"
+        }
+      },
+      {
+        "name": "Alexandra N.",
+        "quote": "The serum reduced fine lines and improved the overall texture and firmness of my skin. Friends keep complimenting my complexion.",
+        "image": {
+          "src": "assets/img/ba2.png",
+          "alt": "Alexandra after using serum"
+        }
+      },
+      {
+        "name": "Maria L.",
+        "quote": "My skin feels firmer, smoother, and years younger. No other product has made a difference like this.",
+        "image": {
+          "src": "assets/img/ba3.png",
+          "alt": "Maria after using serum"
+        }
+      },
+      {
+        "name": "Claudia O.",
+        "quote": "My skin looks and feels revitalized and I have regained my youthful glow. It is like a fountain of youth in a box!",
+        "image": {
+          "src": "assets/img/ba4.png",
+          "alt": "Claudia smiling after treatment"
+        }
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "Loved by thousands of women",
+    "cards": [
+      {
+        "name": "Samantha G.",
+        "badge": "Verified customer",
+        "quote": "\"I have always struggled with my skin, especially wrinkles and oiliness. After a few weeks my fine lines are less noticeable and my skin looks healthier and balanced.\"",
+        "image": {
+          "src": "assets/img/t1.png",
+          "alt": "Samantha using serum"
+        }
+      },
+      {
+        "name": "Michelle B.",
+        "badge": "Verified customer",
+        "quote": "\"Within a month I noticed a significant difference in texture and appearance. Argireline and botulinum toxin combat my crow's feet and forehead wrinkles like nothing else.\"",
+        "image": {
+          "src": "assets/img/t2.png",
+          "alt": "Michelle showing results"
+        }
+      },
+      {
+        "name": "Karen F.",
+        "badge": "Verified customer",
+        "quote": "\"After a few weeks the fine lines around my eyes softened and the overall tone and texture of my skin improved. I feel confident without makeup!\"",
+        "image": {
+          "src": "assets/img/t3.png",
+          "alt": "Karen after using serum"
+        }
+      }
+    ]
+  },
+  "productClaims": {
+    "title": "Scientifically proven to",
+    "items": [
+      "Look two decades younger in just a few weeks by reducing wrinkles and fine lines.",
+      "Firm and lift sagging skin for a taut, supple appearance.",
+      "Use only natural ingredients with no side effects.",
+      "Stimulate collagen synthesis for a firmer, more youthful complexion.",
+      "Even out skin tone and texture for a flawless look."
+    ],
+    "supportingImage": {
+      "src": "assets/img/right.png",
+      "alt": "Woman applying serum"
+    }
+  },
+  "howToUse": {
+    "title": "Four ordinary steps",
+    "subtitle": "Rose moisturizing essence, Usage Tips",
+    "steps": [
+      {
+        "label": "Step 1",
+        "description": "Press the dropper and absorb appropriate amount of essence",
+        "image": {
+          "src": "assets/img/step1.png",
+          "alt": "Applying drops of serum"
+        }
+      },
+      {
+        "label": "Step 2",
+        "description": "Drip onto the face",
+        "image": {
+          "src": "assets/img/step2.png",
+          "alt": "Dabbing serum on face"
+        }
+      },
+      {
+        "label": "Step 3",
+        "description": "Apply evenly",
+        "image": {
+          "src": "assets/img/step3.png",
+          "alt": "Applying moisturizer"
+        }
+      },
+      {
+        "label": "Step 4",
+        "description": "Massage until absorption is complete",
+        "image": {
+          "src": "assets/img/step4.png",
+          "alt": "Applying moisturizer"
+        }
+      }
+    ],
+    "animation": {
+      "src": "assets/img/steps-right.png",
+      "alt": "Serum application animation"
+    }
+  },
+  "guarantee": {
+    "headline": "Younger looking skin or you pay nothing!",
+    "body": "Every product is covered by our 90 Day Money Back Guarantee. Try it for 90 days and if you are not completely satisfied, for any reason, send it back and we will refund the full amount of your purchase.",
+    "contact": {
+      "email": "support@example.com",
+      "phone": "(754) 227-6438"
+    },
+    "image": {
+      "src": "assets/img/money-back.png",
+      "alt": "Money back guarantee seal"
+    }
+  },
+  "faq": {
+    "title": "The answers to your questions",
+    "items": [
+      {
+        "question": "How long does it take to see results with 5in1 Facial Serum?",
+        "answer": "Clients report noticeable wrinkle reduction in as little as 7 days, with most seeing visible improvements within 2 weeks."
+      },
+      {
+        "question": "Is the serum suitable for all skin types, including sensitive skin?",
+        "answer": "Yes. Dermatological tests show the serum can be used on sensitive skin."
+      },
+      {
+        "question": "How much longer will the sale be on for?",
+        "answer": "The sale ends once we run out of stock. After that it will take 30 days to restock and prices return to full price. Remaining units: 28."
+      },
+      {
+        "question": "Where does this fall in my skincare routine?",
+        "answer": "Apply the serum as step two, after cleansing and before moisturizing."
+      },
+      {
+        "question": "What if I am not happy with the results?",
+        "answer": "Contact support@example.com within 90 days of purchase for a full refund. Your satisfaction is guaranteed."
+      }
+    ]
+  },
+  "finalCta": {
+    "headline": "Last chance to grab this limited special offer",
+    "subheadline": "Instant online discount today!",
+    "cta": {
+      "label": "Get 70% Discount Now",
+      "href": "#"
+    },
+    "supportingCopy": "Available online only | While supplies last. Free Shipping | 90 Day Money-Back Guarantee."
+  },
+  "checkout": {
+    "title": "Choose the bundle that fits your routine",
+    "subtitle": "Select the package that gives you the results you want fastest.",
+    "continueLabel": "Continue to secure checkout",
+    "stripe": {
+      "mode": "test",
+      "testPublishableKey": "pk_test_51SLJ7hAAxHCpkm1F3fzJ5huamxhYHcZ7hOzhbVe9Q78wK9kDrHkLn3imN6fdm9xQyGWOPzXXGEMUFk2uRscwc2Cw00QMwsWvLX",
+      "livePublishableKey": "123123123"
+    },
+    "options": [
+      {
+        "id": "single-bottle",
+        "name": "Single Bottle",
+        "description": "30-day supply | Perfect for first-time results",
+        "price": 50,
+        "currency": "usd",
+        "quantity": 1,
+        "badge": "Starter",
+        "subcopy": "One-time purchase. Free shipping included.",
+        "metadata": {
+          "sku": "serum-single"
+        },
+        "image": {
+          "src": "/uploads/bottle-1761291134722-85595885.png",
+          "alt": ""
+        }
+      },
+      {
+        "id": "double-bundle",
+        "name": "2 Bottle Bundle",
+        "description": "60-day supply | Keep your glow going",
+        "price": 80,
+        "currency": "usd",
+        "quantity": 1,
+        "badge": "Most Popular",
+        "bestValue": true,
+        "subcopy": "Save 10% compared to a single bottle.",
+        "metadata": {
+          "sku": "serum-double"
+        },
+        "image": {
+          "src": "/uploads/bottle-1761291124287-700393175.png",
+          "alt": ""
+        }
+      },
+      {
+        "id": "triple-bundle",
+        "name": "3 Bottle Bundle",
+        "description": "90-day supply | Transform your routine",
+        "price": 120,
+        "currency": "usd",
+        "quantity": 1,
+        "badge": "Best Value",
+        "subcopy": "Save 20% and lock in your progress.",
+        "metadata": {
+          "sku": "serum-triple"
+        },
+        "image": {
+          "src": "/uploads/bottle-1761291130001-960102247.png",
+          "alt": ""
+        }
+      }
+    ],
+    "thankYou": {
+      "headline": "Thank you for your purchase!",
+      "subheadline": "Your 5in1 Facial Serum order is confirmed.",
+      "description": "We just sent a confirmation email with your receipt and shipping details. Expect tracking information within the next 24 hours.",
+      "cta": {
+        "label": "Continue browsing",
+        "href": "/"
+      },
+      "supportingCopy": "Need anything else? Our support team is here for you at support@example.com.",
+      "image": {
+        "src": "/uploads/right-1761293344342-944637795.png",
+        "alt": "Happy customer holding skincare products"
+      }
+    }
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "October 23, 2025",
+    "blocks": [
+      {
+        "title": "1. Introduction",
+        "paragraph": "This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or interact with our products and services."
+      },
+      {
+        "title": "2. Information We Collect",
+        "paragraph": "We may collect personal information that you voluntarily provide when you purchase a product, sign up for our newsletter, or contact our support team. This includes your name, email address, shipping address, and payment details.\nWe also collect non-personal information automatically through cookies and similar technologies, such as your browser type, device information, and interaction data."
+      },
+      {
+        "title": "3. How We Use Your Information",
+        "paragraph": "We use your information to:\n- Process and fulfill your orders.\n- Provide customer support and respond to inquiries.\n- Send promotional communications, product updates, and special offers.\n- Improve our website, products, and overall customer experience.\n- Comply with legal obligations and enforce our policies."
+      },
+      {
+        "title": "4. Sharing Your Information",
+        "paragraph": "We may share your information with trusted third-party service providers who assist us in operating our business, such as payment processors, shipping companies, and marketing partners. These parties are contractually obligated to protect your data and only use it for the services they provide to us."
+      },
+      {
+        "title": "5. Data Security",
+        "paragraph": "We use industry-standard security measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security."
+      },
+      {
+        "title": "6. Your Rights and Choices",
+        "paragraph": "You can update your personal information or unsubscribe from marketing emails at any time. You may also request access to, correction of, or deletion of your personal information by contacting us at support@domain.co."
+      },
+      {
+        "title": "7. Contact Us",
+        "paragraph": "If you have any questions about this Privacy Policy, please contact us at support@domain.co or write to our customer service team at the address listed on your order confirmation."
+      }
+    ]
+  },
+  "termsOfService": {
+    "title": "Terms of Service",
+    "lastUpdated": "October 23, 2025",
+    "blocks": [
+      {
+        "title": "1. Agreement to Terms",
+        "paragraph": "By accessing or using this website, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, please discontinue use of the site."
+      },
+      {
+        "title": "2. Products and Purchases",
+        "paragraph": "All purchases are subject to availability and our acceptance. We reserve the right to limit quantities, refuse orders, or update pricing at any time. You agree to provide current, complete, and accurate purchase and account information for all transactions."
+      },
+      {
+        "title": "3. Billing and Payment",
+        "paragraph": "You authorize us and our third-party payment processors to charge the payment method you provide for all orders placed. You are responsible for any additional taxes, fees, or charges applicable to your purchase."
+      },
+      {
+        "title": "4. Shipping and Returns",
+        "paragraph": "We process orders within standard timelines and provide tracking information where available. If you are not satisfied with your purchase, please refer to our return policy or contact support@domain.co within the guarantee period."
+      },
+      {
+        "title": "5. Intellectual Property",
+        "paragraph": "All content on this site, including text, graphics, logos, and images, is the property of domain or its licensors and protected by intellectual property laws. You may not use, reproduce, or distribute any content without express written permission."
+      },
+      {
+        "title": "6. Limitation of Liability",
+        "paragraph": "To the fullest extent permitted by law, domain is not liable for any indirect, incidental, or consequential damages arising from your use of the site or products."
+      },
+      {
+        "title": "7. Changes to These Terms",
+        "paragraph": "We may update these Terms of Service from time to time. The date at the top of this page reflects the most recent revisions. Continued use of the site after changes means you accept the revised terms."
+      },
+      {
+        "title": "8. Contact Us",
+        "paragraph": "For questions about these Terms, please contact support@domain.co or use the information provided in your order confirmation."
+      }
+    ]
+  },
+  "footer": {
+    "helpLinks": [
+      {
+        "label": "Privacy Policy",
+        "href": "/privacy-policy"
+      }
+    ],
+    "orderLinks": [
+      {
+        "label": "Terms of Service",
+        "href": "/terms-of-service"
+      }
+    ],
+    "paymentImage": {
+      "src": "/assets/img/payment.png",
+      "alt": "Accepted payment icons"
+    },
+    "copyright": "Copyright 2024. All rights reserved."
+  }
+}

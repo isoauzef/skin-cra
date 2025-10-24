@@ -1,0 +1,14 @@
+export { default as BrandingStrip } from './BrandingStrip';
+export { default as HeroSection } from './HeroSection';
+export { default as BenefitsSection } from './BenefitsSection';
+export { default as ScienceCallout } from './ScienceCallout';
+export { default as IngredientsSection } from './IngredientsSection';
+export { default as ResultsSection } from './ResultsSection';
+export { default as TestimonialsSection } from './TestimonialsSection';
+export { default as ProductClaimsSection } from './ProductClaimsSection';
+export { default as HowToUseSection } from './HowToUseSection';
+export { default as GuaranteeSection } from './GuaranteeSection';
+export { default as FaqSection } from './FaqSection';
+export { default as FinalCtaSection } from './FinalCtaSection';
+export { default as FooterSection } from './FooterSection';
+export { default as CheckoutModal } from './CheckoutModal';
