@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { CheckoutProvider } from '@stripe/react-stripe-js/checkout';
 import { loadStripe } from '@stripe/stripe-js';
@@ -28,12 +28,14 @@ const formatCurrency = (amount, currency = 'usd') => {
   }
 };
 
-function StripeCheckoutContainer({ checkout, onRequestClose }) {
+function StripeCheckoutContainer({ checkout, onRequestClose, displayMode = 'modal' }) {
   const productOptions = useMemo(
     () => (Array.isArray(checkout?.options) ? checkout.options.filter(Boolean) : []),
     [checkout?.options],
   );
   const hasProductOptions = productOptions.length > 0;
+  const isInline = displayMode === 'inline';
+
   const defaultOptionId = useMemo(() => {
     if (!hasProductOptions) {
       return null;
@@ -42,6 +44,7 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
     const preferred = productOptions.find((option) => option?.bestValue || option?.default);
     return preferred?.id || productOptions[0]?.id || null;
   }, [hasProductOptions, productOptions]);
+
   const [clientSecret, setClientSecret] = useState('');
   const [message, setMessage] = useState(hasProductOptions ? '' : 'Preparing checkout…');
   const [isLoading, setIsLoading] = useState(!hasProductOptions);
@@ -53,6 +56,7 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
   });
 
   const [stripePromise, setStripePromise] = useState(null);
+  const lastFetchedOptionRef = useRef(null);
 
   const apiBase = useMemo(() => {
     const configured = process.env.REACT_APP_API_BASE_URL ? process.env.REACT_APP_API_BASE_URL.trim() : '';
@@ -123,11 +127,11 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
   const buildPayload = useCallback(
     (option, { includeDefaultPriceId } = {}) => {
       const quantity = Number.isInteger(option?.quantity) && option.quantity > 0 ? option.quantity : 1;
-    const resolvedCurrency = (option?.currency || checkout?.currency || 'usd').toLowerCase();
+      const resolvedCurrency = (option?.currency || checkout?.currency || 'usd').toLowerCase();
       const fallbackPriceId = includeDefaultPriceId ? process.env.REACT_APP_STRIPE_PRICE_ID : undefined;
       const priceId = option?.priceId || fallbackPriceId;
-    const normalizedPrice = Number(option?.price);
-    const resolvedAmount = Number.isFinite(normalizedPrice) ? Math.round(normalizedPrice * 100) : undefined;
+      const normalizedPrice = Number(option?.price);
+      const resolvedAmount = Number.isFinite(normalizedPrice) ? Math.round(normalizedPrice * 100) : undefined;
       const description = option?.checkoutDescription || option?.name || checkout?.title || 'Skin bundle checkout';
 
       const metadata = {
@@ -247,7 +251,9 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
     }
 
     if (hasProductOptions) {
-      setIsLoading(false);
+      if (!isInline) {
+        setIsLoading(false);
+      }
       return () => {
         isMounted = false;
         controller.abort();
@@ -272,11 +278,42 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
       isMounted = false;
       controller.abort();
     };
-  }, [buildPayload, hasProductOptions, isReturnView, requestClientSecret]);
+  }, [buildPayload, hasProductOptions, isInline, isReturnView, requestClientSecret]);
+
+  useEffect(() => {
+    if (!isInline || !hasProductOptions || !selectedOption || isReturnView) {
+      return undefined;
+    }
+
+    if (lastFetchedOptionRef.current === selectedOption.id && clientSecret) {
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    lastFetchedOptionRef.current = selectedOption.id || null;
+    setClientSecret('');
+
+    // Automatically fetch a client secret when the checkout is rendered inline.
+    requestClientSecret(buildPayload(selectedOption), {
+      signal: controller.signal,
+      captureSelectionError: true,
+    }).catch((error) => {
+      if (!controller.signal.aborted) {
+        lastFetchedOptionRef.current = null;
+        setMessage(error?.message || 'Unable to prepare checkout.');
+      }
+    });
+
+    return () => {
+      controller.abort();
+    };
+  }, [buildPayload, clientSecret, hasProductOptions, isInline, isReturnView, requestClientSecret, selectedOption]);
 
   const handleOptionChange = useCallback((event) => {
     setSelectedOptionId(event.target.value);
     setSelectionError('');
+    setMessage('');
+    lastFetchedOptionRef.current = null;
   }, []);
 
   const handleOptionSubmit = useCallback(async () => {
@@ -286,8 +323,10 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
     }
 
     try {
+      lastFetchedOptionRef.current = selectedOption.id || null;
       await requestClientSecret(buildPayload(selectedOption), { captureSelectionError: true });
     } catch (_error) {
+      lastFetchedOptionRef.current = null;
       // Error state handled inside requestClientSecret
     }
   }, [buildPayload, requestClientSecret, selectedOption]);
@@ -297,6 +336,7 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
     setMessage('');
     setSelectionError('');
     setIsLoading(false);
+    lastFetchedOptionRef.current = null;
   }, []);
 
   const selectedOptionSummary = useMemo(() => {
@@ -328,7 +368,135 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
   }
 
   if (!stripePromise) {
-  return <div className="stripe-status-message" role="alert">Add a Stripe publishable key in the dashboard.</div>;
+    return <div className="stripe-status-message" role="alert">Add a Stripe publishable key in the dashboard.</div>;
+  }
+
+  const renderOptionCard = (option) => {
+    const isSelected = option?.id === selectedOptionId;
+    const priceLabel = option?.displayPrice
+      || formatCurrency(option?.price, option?.currency || checkout?.currency || 'usd');
+    const optionImageSrc = option?.image?.src ? resolveAssetPath(option.image.src) : '';
+    const optionImageAlt = option?.image?.alt
+      || (option?.name ? `${option.name} product image` : 'Checkout option image');
+
+    const contentMarkup = (
+      <>
+        {option?.badge ? <span className="checkout-option__badge">{option.badge}</span> : null}
+        <span className="checkout-option__name">{option?.name}</span>
+        {option?.description ? (
+          <p className="checkout-option__description">{option.description}</p>
+        ) : null}
+        {priceLabel ? <span className="checkout-option__price">{priceLabel}</span> : null}
+        {option?.subcopy ? (
+          <span className="checkout-option__subcopy">{option.subcopy}</span>
+        ) : null}
+      </>
+    );
+
+    return (
+      <label
+        key={option?.id || option?.name}
+        className={`checkout-option${isSelected ? ' checkout-option--selected' : ''}${
+          option?.bestValue ? ' checkout-option--best' : ''
+        }`}
+      >
+        <input
+          type="radio"
+          name="checkout-option"
+          value={option?.id}
+          checked={isSelected}
+          onChange={handleOptionChange}
+          disabled={isLoading && !isInline}
+        />
+        {optionImageSrc ? (
+          <div className="checkout-option__layout">
+            <div className="checkout-option__media">
+              <img
+                src={optionImageSrc}
+                alt={optionImageAlt}
+                className="checkout-option__image"
+                loading="lazy"
+              />
+            </div>
+            <div className="checkout-option__content">{contentMarkup}</div>
+          </div>
+        ) : (
+          <div className="checkout-option__content">{contentMarkup}</div>
+        )}
+      </label>
+    );
+  };
+
+  if (isInline) {
+    let formContent;
+
+    if (isLoading) {
+      formContent = (
+        <div className="stripe-status-message" role="status">{message || 'Preparing checkout…'}</div>
+      );
+    } else if (!clientSecret) {
+      formContent = (
+        <div className="stripe-status-message" role={selectionError ? 'alert' : 'status'}>
+          {selectionError || message || 'Select a package to load checkout.'}
+        </div>
+      );
+    } else {
+      const appearance = {
+        theme: 'stripe',
+        variables: {
+          colorPrimary: '#ff5a5f',
+          colorText: '#1f1f1f',
+          borderRadius: '8px',
+          fontFamily: 'Lato, sans-serif',
+          fontLineHeight: '1.5',
+        },
+        rules: {
+          '.Input': {
+            fontFamily: 'Lato, sans-serif',
+            fontSize: '16px',
+          },
+          '.Input::placeholder': {
+            fontFamily: 'Lato, sans-serif',
+            color: '#6f6f6f',
+          },
+          '.Input:focus::placeholder': {
+            color: '#a0a0a0',
+          },
+          '.BlockLabel': {
+            fontFamily: 'Lato, sans-serif',
+          },
+          '.TabLabel': {
+            fontFamily: 'Lato, sans-serif',
+          },
+          '.Text': {
+            fontFamily: 'Lato, sans-serif',
+          },
+        },
+      };
+
+      formContent = (
+        <CheckoutProvider stripe={stripePromise} options={{ clientSecret, elementsOptions: { appearance } }}>
+          <StripeCheckoutForm selectedOption={selectedOptionSummary} />
+        </CheckoutProvider>
+      );
+    }
+
+    return (
+      <div className="checkout-inline__grid">
+        <div
+          className="checkout-inline__column checkout-inline__column--options"
+          aria-busy={isLoading ? 'true' : 'false'}
+        >
+          <div className="checkout-inline__options-grid">
+            {productOptions.map((option) => renderOptionCard(option))}
+          </div>
+          {selectionError && clientSecret ? (
+            <div className="stripe-status-message stripe-status-error" role="alert">{selectionError}</div>
+          ) : null}
+        </div>
+        <div className="checkout-inline__column checkout-inline__column--form">{formContent}</div>
+      </div>
+    );
   }
 
   if (hasProductOptions && !clientSecret) {
@@ -339,49 +507,7 @@ function StripeCheckoutContainer({ checkout, onRequestClose }) {
           {checkout?.subtitle ? <p>{checkout.subtitle}</p> : null}
         </div>
         <div className="checkout-options__grid">
-          {productOptions.map((option) => {
-            const isSelected = option?.id === selectedOptionId;
-            const priceLabel = option?.displayPrice
-              || formatCurrency(option?.price, option?.currency || checkout?.currency || 'usd');
-            const optionImageSrc = option?.image?.src ? resolveAssetPath(option.image.src) : '';
-            const optionImageAlt = option?.image?.alt
-              || (option?.name ? `${option.name} product image` : 'Checkout option image');
-
-            return (
-              <label
-                key={option?.id || option?.name}
-                className={`checkout-option${isSelected ? ' checkout-option--selected' : ''}${
-                  option?.bestValue ? ' checkout-option--best' : ''
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="checkout-option"
-                  value={option?.id}
-                  checked={isSelected}
-                  onChange={handleOptionChange}
-                  disabled={isLoading}
-                />
-                {optionImageSrc ? (
-                  <img
-                    src={optionImageSrc}
-                    alt={optionImageAlt}
-                    className="checkout-option__image"
-                    loading="lazy"
-                  />
-                ) : null}
-                {option?.badge ? <span className="checkout-option__badge">{option.badge}</span> : null}
-                <span className="checkout-option__name">{option?.name}</span>
-                {option?.description ? (
-                  <p className="checkout-option__description">{option.description}</p>
-                ) : null}
-                {priceLabel ? <span className="checkout-option__price">{priceLabel}</span> : null}
-                {option?.subcopy ? (
-                  <span className="checkout-option__subcopy">{option.subcopy}</span>
-                ) : null}
-              </label>
-            );
-          })}
+          {productOptions.map((option) => renderOptionCard(option))}
         </div>
         <div className="checkout-options__actions">
           <button
@@ -499,6 +625,8 @@ StripeCheckoutContainer.propTypes = {
     ),
   }),
   onRequestClose: PropTypes.func,
+  displayMode: PropTypes.oneOf(['modal', 'inline']),
 };
 
 export default StripeCheckoutContainer;
+

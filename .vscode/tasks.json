@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "TODO",
+			"type": "shell",
+			"command": "echo TODO"
+		},
+		{
+			"label": "todo-plan",
+			"type": "shell",
+			"command": "echo \"TODO:\\n1. Capture npm start error logs.\\n2. Diagnose root cause.\\n3. Implement fix and verify.\""
+		},
+		{
+			"label": "todo-plan",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"TODO:",
+				"1. Audit hero section structure.",
+				"2. Design layout combining products and form.",
+				"3. Update JSX/CSS for new layout.",
+				"4. Validate rendering and interactions."
+			]
+		}
+	]
+}

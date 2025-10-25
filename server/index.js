@@ -385,7 +385,28 @@ app.post('/create-checkout-session', async (req, res) => {
       ...(process.env.STRIPE_ENABLE_AUTOMATIC_TAX === 'true'
         ? { automatic_tax: { enabled: true } }
         : {}),
+      expand: ['payment_intent'],
     });
+
+    const paymentIntentId = typeof session.payment_intent === 'string'
+      ? session.payment_intent
+      : session.payment_intent?.id;
+
+    if (paymentIntentId) {
+      try {
+        await stripeClient.paymentIntents.update(paymentIntentId, {
+          payment_method_options: {
+            card: {
+              request_three_d_secure: 'any',
+            },
+          },
+        });
+      } catch (updateError) {
+        console.error('Failed to require 3D Secure on PaymentIntent:', updateError);
+      }
+    } else {
+      console.warn('Unable to enforce 3D Secure: missing payment intent on session', session.id);
+    }
 
     res.json({ clientSecret: session.client_secret, sessionId: session.id });
   } catch (error) {

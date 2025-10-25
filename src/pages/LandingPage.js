@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import StripeCheckoutContainer from '../components/StripeCheckoutContainer';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import useLandingContent from '../hooks/useLandingContent';
 import {
   BrandingStrip,
@@ -15,7 +14,7 @@ import {
   FaqSection,
   FinalCtaSection,
   FooterSection,
-  CheckoutModal,
+  CheckoutSection,
 } from '../components/landing';
 import './LandingPage.css';
 
@@ -24,8 +23,8 @@ function LandingPage() {
   const hasCheckoutReturn = useMemo(() => {
     return new URLSearchParams(window.location.search).has('session_id');
   }, []);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(() => hasCheckoutReturn);
   const checkoutEnabled = Boolean(content?.checkout);
+  const checkoutSectionRef = useRef(null);
 
   useEffect(() => {
     const routeHandler = (event) => {
@@ -55,23 +54,24 @@ function LandingPage() {
     };
   }, []);
 
-  const handleOpenCheckout = useCallback(() => {
-    setIsCheckoutOpen(true);
-  }, []);
-
-  const handleCloseCheckout = useCallback(() => {
-    setIsCheckoutOpen(false);
-  }, []);
-
-  useEffect(() => {
+  const scrollToCheckout = useCallback(() => {
     if (!checkoutEnabled) {
-      setIsCheckoutOpen(false);
       return;
     }
 
-    if (hasCheckoutReturn) {
-      setIsCheckoutOpen(true);
+    checkoutSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [checkoutEnabled]);
+
+  const handleOpenCheckout = useCallback(() => {
+    scrollToCheckout();
+  }, [scrollToCheckout]);
+
+  useEffect(() => {
+    if (!checkoutEnabled || !hasCheckoutReturn) {
+      return;
     }
+
+    checkoutSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [checkoutEnabled, hasCheckoutReturn]);
 
   const body = useMemo(() => {
@@ -99,6 +99,9 @@ function LandingPage() {
           onPrimaryCtaClick={checkoutEnabled ? handleOpenCheckout : undefined}
           onSecondaryCtaClick={checkoutEnabled ? handleOpenCheckout : undefined}
         />
+        {checkoutEnabled ? (
+          <CheckoutSection ref={checkoutSectionRef} checkout={content.checkout} />
+        ) : null}
         <BenefitsSection benefits={content.benefits} />
         <ScienceCallout scienceCallout={content.scienceCallout} />
         <IngredientsSection
@@ -123,16 +126,6 @@ function LandingPage() {
   return (
     <main className="landing-page" data-landing-root>
       {body}
-      {checkoutEnabled && (
-        <CheckoutModal open={isCheckoutOpen} onClose={handleCloseCheckout}>
-          <div className="hero__checkout">
-            <StripeCheckoutContainer
-              checkout={content.checkout}
-              onRequestClose={handleCloseCheckout}
-            />
-          </div>
-        </CheckoutModal>
-      )}
     </main>
   );
 }

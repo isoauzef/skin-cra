@@ -4,8 +4,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Lato-Regular.woff2') format('woff2'),
-       url('../fonts/Lato-Regular.ttf') format('truetype');
+  src: url('../fonts/Lato-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -13,8 +12,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../fonts/Lato-Bold.woff2') format('woff2'),
-       url('../fonts/Lato-Bold.ttf') format('truetype');
+  src: url('../fonts/Lato-Bold.woff2') format('woff2');
 }
 
 @font-face {
@@ -34,27 +32,11 @@
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('../fonts/Montserrat-Bold.ttf') format('truetype');
-}
-
-@font-face {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/Poppins-Regular.ttf') format('truetype');
+  src: url('https://fonts.gstatic.com/s/poppins/v21/pxiEyp8kv8JHgFVrFJDUcQ.woff2') format('woff2');
 }
 
 @font-face {
@@ -62,7 +44,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('../fonts/Poppins-SemiBold.ttf') format('truetype');
+  src: url('https://fonts.gstatic.com/s/poppins/v21/pxiByp8kv8JHgFVrLFj_Z1Y.woff2') format('woff2');
 }
 
 @font-face {
@@ -70,5 +52,5 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../fonts/Poppins-Bold.ttf') format('truetype');
+  src: url('https://fonts.gstatic.com/s/poppins/v21/pxiByp8kv8JHgFVrLCz7Z1Y.woff2') format('woff2');
 }

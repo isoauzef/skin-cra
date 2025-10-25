@@ -11,4 +11,4 @@ export { default as GuaranteeSection } from './GuaranteeSection';
 export { default as FaqSection } from './FaqSection';
 export { default as FinalCtaSection } from './FinalCtaSection';
 export { default as FooterSection } from './FooterSection';
-export { default as CheckoutModal } from './CheckoutModal';
+export { default as CheckoutSection } from './CheckoutSection';
