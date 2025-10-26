@@ -68,7 +68,7 @@
       "alt": "Accepted payment methods"
     },
     "testimonial": {
-      "name": "Susan E.",
+      "name": "Sandra L.",
       "rating": 5,
       "quote": "\"As a 65 year old woman, I have been trying facial products for years now... I mean years... I can't believe I have finally found a product that actually works! How things have changed. Great job doctors!\"",
       "avatar": "/uploads/woman1-1761290011105-77563879.png"
@@ -147,15 +147,15 @@
     "intro": "Real women share their journeys to smoother, more youthful skin.",
     "stories": [
       {
-        "name": "Barbara E.",
+        "name": "Christina K.",
         "quote": "It's like I'm putting on make up without putting on make up. I finally feel comfortable in my skin again!",
         "image": {
-          "src": "assets/img/ba1.png",
+          "src": "/uploads/f1-1-min-1761493539492-798501281.jpg",
           "alt": "Barbara after using serum"
         }
       },
       {
-        "name": "Alexandra N.",
+        "name": "Julia C.",
         "quote": "Product actually works and works great! My husband thinks I got a facelift and loves the new me, really loves!",
         "image": {
           "src": "assets/img/ba2.png",
@@ -163,7 +163,7 @@
         }
       },
       {
-        "name": "Maria L.",
+        "name": "Mary W.",
         "quote": "My skin actually changed in front of my eyes, every morning I noticed a difference until I was unnoticeable. No other product has made a difference like this.",
         "image": {
           "src": "assets/img/ba3.png",
@@ -171,7 +171,7 @@
         }
       },
       {
-        "name": "Claudia O.",
+        "name": "Martha J.",
         "quote": "I have uploaded my before and after. How is this possible! 3 bottles was all it took... You could see it working right in front of your eyes. ",
         "image": {
           "src": "assets/img/ba4.png",
@@ -184,7 +184,7 @@
     "title": "Loved by thousands of women",
     "cards": [
       {
-        "name": "Samantha G.",
+        "name": "Lily A.",
         "badge": "Verified customer",
         "quote": "\"I have always struggled with skincare products, never helped me. But this new product in just a few weeks changed my skin tone drastically and my make up actually stays on after applying serum.\"",
         "image": {
@@ -193,7 +193,7 @@
         }
       },
       {
-        "name": "Michelle B.",
+        "name": "Lucy T.",
         "badge": "Verified customer",
         "quote": "\"Wow is all I could say! Everyone thinks I've gotten Botox or some sort of a surgical procedure. I guess mixing the high active ingredients did the trick.\"",
         "image": {
@@ -202,9 +202,9 @@
         }
       },
       {
-        "name": "Karen F.",
+        "name": "Morgana S.",
         "badge": "Verified customer",
-        "quote": "\"Okay so I saw this product on TV, of course I didn't believe it worked, but the money back guarantee kind a sucked me in. In 3 days look at my before and after. Amazing product! Thank you thank you thank you! \"",
+        "quote": "\"Okay so I saw this product on TV, of course I didn't believe it worked, but the money back guarantee kind of sucked me in, so I tried it and girl... in just 3 days.. look at the changes it made on my face! Amazing product! Thank you thank you thank you!\"",
         "image": {
           "src": "assets/img/t3.png",
           "alt": "Karen after using serum"
@@ -319,7 +319,7 @@
     "subtitle": "Select the package that gives you the results you want fastest.",
     "continueLabel": "Continue to secure checkout",
     "stripe": {
-      "mode": "test",
+      "mode": "live",
       "testPublishableKey": "pk_test_51SLJ7hAAxHCpkm1F3fzJ5huamxhYHcZ7hOzhbVe9Q78wK9kDrHkLn3imN6fdm9xQyGWOPzXXGEMUFk2uRscwc2Cw00QMwsWvLX",
       "livePublishableKey": "pk_live_51SMCEWQ3Zf0b9tkXPboBLMIDAB8EycidoG4FzntWsMmIMSObkoEBIu4gHgUSFV0QXPRpOhKxLS8EFj58sYMDoyZP003VB272la"
     },
