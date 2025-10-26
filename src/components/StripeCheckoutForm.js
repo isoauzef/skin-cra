@@ -252,14 +252,23 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
       </label>
       <input
         id="checkout-email"
-        name="checkout-email"
+        dir="ltr"
         type="email"
-        className={`stripe-input${emailError ? ' stripe-input-error' : ''}`}
-        autoComplete="email"
+        inputMode="email"
+        name="linkEmail"
+        className={`stripe-input p-Input-input p-Fieldset-input Input p-EmailField-input p-Input-input--textRight${
+          email.trim() ? '' : ' Input--empty'
+        }${emailError ? ' stripe-input-error' : ''}`}
+        autoComplete="billing email"
+        autoCapitalize="none"
+        data-lp-ignore="true"
+        aria-invalid={emailError ? 'true' : 'false'}
+        aria-describedby={emailError ? 'email-errors' : undefined}
+        aria-required="true"
         value={email}
         onChange={handleEmailChange}
         onBlur={handleEmailBlur}
-        placeholder="you@example.com"
+        placeholder="Email"
         required
         style={{ fontFamily: 'Lato, sans-serif' }}
       />
