@@ -67,6 +67,28 @@ function CheckoutPage() {
     };
   }, [checkout, selectedOption]);
 
+  const pageHeading = useMemo(() => {
+    if (!checkout) {
+      return 'Complete Your Purchase';
+    }
+
+    if (typeof checkout.checkoutPageTitle === 'string') {
+      const trimmed = checkout.checkoutPageTitle.trim();
+      if (!trimmed) {
+        return null;
+      }
+      return checkout.checkoutPageTitle;
+    }
+
+    const fallback = typeof checkout.heading === 'string' && checkout.heading.trim()
+      ? checkout.heading
+      : typeof checkout.title === 'string' && checkout.title.trim()
+        ? checkout.title
+        : '';
+
+    return fallback || 'Complete Your Purchase';
+  }, [checkout]);
+
   const productDetails = useMemo(() => {
     if (!selectedOption) {
       return null;
@@ -117,10 +139,7 @@ function CheckoutPage() {
           <button type="button" className="checkout-page__back" onClick={handleBackToProducts}>
             ← Back to products
           </button>
-          {productDetails.badge ? (
-            <span className="checkout-page__badge">{productDetails.badge}</span>
-          ) : null}
-          <h1>{checkout.heading || checkout.title || 'Complete Your Purchase'}</h1>
+          {pageHeading ? <h1>{pageHeading}</h1> : null}
           <article className="checkout-page__card">
             {productDetails.imageSrc ? (
               <div className="checkout-page__card-media">

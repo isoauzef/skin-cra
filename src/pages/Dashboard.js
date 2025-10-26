@@ -254,6 +254,10 @@ const normalizeContent = (content) => {
   }
 
   if (clone.checkout) {
+    clone.checkout.checkoutPageTitle = typeof clone.checkout.checkoutPageTitle === 'string'
+      ? clone.checkout.checkoutPageTitle
+      : '';
+
     if (!clone.checkout.stripe || typeof clone.checkout.stripe !== 'object' || Array.isArray(clone.checkout.stripe)) {
       clone.checkout.stripe = {
         mode: 'test',

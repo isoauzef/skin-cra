@@ -316,6 +316,7 @@
   },
   "checkout": {
     "title": "Choose the bundle that fits your routine",
+    "checkoutPageTitle": "",
     "subtitle": "Select the package that gives you the results you want fastest.",
     "continueLabel": "Continue to secure checkout",
     "stripe": {

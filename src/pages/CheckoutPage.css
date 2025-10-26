@@ -1,6 +1,6 @@
 .checkout-page {
   display: grid;
-  gap: 3rem;
+  gap: 2rem;
   background: #fff5f3;
 }
 
@@ -17,7 +17,7 @@
 .checkout-page__layout {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  padding: 0 1.5rem 4rem;
   display: grid;
   gap: 2.5rem;
 }
@@ -33,6 +33,9 @@
   display: grid;
   gap: 1.5rem;
   text-align: left;
+ margin-top: 2rem;
+
+  margin-bottom: 2rem;
 }
 
 .checkout-page__back {
@@ -48,18 +51,6 @@
 
 .checkout-page__back:hover {
   color: #c73c41;
-}
-
-.checkout-page__badge {
-  justify-self: start;
-  padding: 0.3rem 0.9rem;
-  border-radius: 999px;
-  background: #e5b5b2;
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .checkout-page__details h1 {
@@ -137,9 +128,8 @@
     text-align: center;
   }
 
-  .checkout-page__badge,
   .checkout-page__back {
-    justify-self: center;
+    justify-self: start;
   }
 
   .checkout-page__details h1 {

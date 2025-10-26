@@ -50,8 +50,15 @@
 .stripe-input-label {
   font-family: "Lato", sans-serif;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #2d0c4d;
+color: rgb(31, 31, 31);
+margin-bottom: var(--p-spacing1);
+    font-size: var(--fontSizeSm);
+    transition: transform 0.5s 
+cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s 
+cubic-bezier(0.19, 1, 0.22, 1);
+
+
+
 }
 
 .stripe-input-error {
