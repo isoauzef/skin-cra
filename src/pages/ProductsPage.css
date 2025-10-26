@@ -167,6 +167,7 @@
 
   .product-card__cta {
     justify-self: center;
+    width: 100%;
   }
 }
 
