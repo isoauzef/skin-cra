@@ -321,7 +321,7 @@
     "stripe": {
       "mode": "test",
       "testPublishableKey": "pk_test_51SLJ7hAAxHCpkm1F3fzJ5huamxhYHcZ7hOzhbVe9Q78wK9kDrHkLn3imN6fdm9xQyGWOPzXXGEMUFk2uRscwc2Cw00QMwsWvLX",
-      "livePublishableKey": "123123123"
+      "livePublishableKey": "pk_live_51SMCEWQ3Zf0b9tkXPboBLMIDAB8EycidoG4FzntWsMmIMSObkoEBIu4gHgUSFV0QXPRpOhKxLS8EFj58sYMDoyZP003VB272la"
     },
     "options": [
       {
