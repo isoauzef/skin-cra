@@ -146,7 +146,27 @@
     text-align: center;
   }
 }
+.checkout-page__card {
+    display: none;
+}
+.checkout-page__layout {
+    display: block;
+}
+.checkout-inline__column {
+    height: unset;
+}
+.checkout-page__details h1 {
+    margin-bottom: 30px;
+}
 
+.checkout-summary__name {
+    font-size: 26px;
+
+}
+.checkout-summary__price {
+    font-size:32px;
+    margin-top: 30px;
+}
 @media only screen and (max-width: 767px) {
     .checkout-page {
         display: block;

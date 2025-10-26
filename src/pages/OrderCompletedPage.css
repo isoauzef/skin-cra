@@ -20,3 +20,13 @@
   margin: 0 auto 4rem;
   padding: 0 1.5rem;
 }
+
+
+@media only screen and (max-width: 767px) {
+    .order-completed-page{
+        display: block;
+    }
+    .order-completed-page__content {
+        margin-top: 30px;
+    }
+}
