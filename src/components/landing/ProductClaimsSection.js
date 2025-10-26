@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, getImageLoadingProps } from './utils';
+import { getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function ProductClaimsSection({ productClaims }) {
   if (!productClaims) {
@@ -24,14 +25,14 @@ function ProductClaimsSection({ productClaims }) {
           </ul>
         )}
       </div>
-      {supportingImage?.src && (
-        <img
+      {supportingImage?.src ? (
+        <ResponsiveImage
           className="claims__image"
-          src={resolveAssetPath(supportingImage.src)}
+          src={supportingImage.src}
           alt={supportingImage.alt || title}
           {...getImageLoadingProps()}
         />
-      )}
+      ) : null}
     </section>
   );
 }

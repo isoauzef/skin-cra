@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, getImageLoadingProps } from './utils';
+import { getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function GuaranteeSection({ guarantee }) {
   if (!guarantee) {
@@ -16,18 +17,17 @@ function GuaranteeSection({ guarantee }) {
         {contact && (
           <ul>
             {contact.email && <li><strong>Email:</strong> <a href={`mailto:${contact.email}`}>{contact.email}</a></li>}
-            {contact.phone && <li><strong>Phone:</strong> <a href={`tel:${contact.phone}`}>{contact.phone}</a></li>}
           </ul>
         )}
       </div>
-      {image?.src && (
-        <img
+      {image?.src ? (
+        <ResponsiveImage
           className="guarantee__image"
-          src={resolveAssetPath(image.src)}
+          src={image.src}
           alt={image.alt || headline}
           {...getImageLoadingProps()}
         />
-      )}
+      ) : null}
     </section>
   );
 }
@@ -38,7 +38,6 @@ GuaranteeSection.propTypes = {
     body: PropTypes.string,
     contact: PropTypes.shape({
       email: PropTypes.string,
-      phone: PropTypes.string,
     }),
     image: PropTypes.shape({
       src: PropTypes.string,

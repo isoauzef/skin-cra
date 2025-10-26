@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { resolveAssetPath, isExternalUrl, getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
   if (!hero) {
@@ -47,7 +48,11 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
             <ul className="hero__bullets">
               {bullets.map((bullet) => (
                 <li key={bullet}>
-                  <i className="icp icp-auto fas fa-check" aria-hidden="true" />
+                  <span className="hero__bullet-icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
+                      <path d="M6.00039 11.1999L3.20039 8.3999L2.26672 9.33324L6.00039 13.0666L14.0004 5.06657L13.0671 4.13324L6.00039 11.1999Z" />
+                    </svg>
+                  </span>
                   <span>{bullet}</span>
                 </li>
               ))}
@@ -92,13 +97,13 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
                 <ul className="hero__badges">
                   {badgeImages.map((badge) => (
                     <li key={badge.src}>
-                      {badge.src && (
-                        <img
-                          src={resolveAssetPath(badge.src)}
+                      {badge.src ? (
+                        <ResponsiveImage
+                          src={badge.src}
                           alt={badge.alt || badge.label}
                           {...getImageLoadingProps({ aboveFold: true })}
                         />
-                      )}
+                      ) : null}
                       {badge.label && <span>{badge.label}</span>}
                     </li>
                   ))}
@@ -106,25 +111,25 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
               )}
               {(paymentImage?.src || reviewHighlightImage?.src) && (
                 <div className="hero__support-row">
-                  {paymentImage?.src && (
-                    <img
+                  {paymentImage?.src ? (
+                    <ResponsiveImage
                       className="hero__payment"
-                      src={resolveAssetPath(paymentImage.src)}
+                      src={paymentImage.src}
                       alt={paymentImage.alt || 'Payment methods'}
                       {...getImageLoadingProps({ aboveFold: true })}
                     />
-                  )}
+                  ) : null}
 
-                  {reviewHighlightImage?.src && (
+                  {reviewHighlightImage?.src ? (
                     <div className="hero__reviews">
-                      <img
-                        src={resolveAssetPath(reviewHighlightImage.src)}
+                      <ResponsiveImage
+                        src={reviewHighlightImage.src}
                         alt={reviewHighlightImage.alt || 'Customer reviews'}
                         {...getImageLoadingProps({ aboveFold: true })}
                       />
-                      {reviewHighlightImage.label && <span>{reviewHighlightImage.label}</span>}
+                      {reviewHighlightImage.label ? <span>{reviewHighlightImage.label}</span> : null}
                     </div>
-                  )}
+                  ) : null}
                 </div>
               )}
             </div>
@@ -133,24 +138,24 @@ function HeroSection({ hero, onPrimaryCtaClick, onSecondaryCtaClick }) {
 
         {(productImage?.src || testimonial) && (
           <div className="hero__media">
-            {productImage?.src && (
-              <img
+            {productImage?.src ? (
+              <ResponsiveImage
                 className="hero__product"
-                src={resolveAssetPath(productImage.src)}
+                src={productImage.src}
                 alt={productImage.alt || 'Featured product'}
                 {...getImageLoadingProps({ aboveFold: true })}
               />
-            )}
+            ) : null}
 
             {testimonial && (
               <figure className="hero__testimonial">
-                {testimonial.avatar && (
-                  <img
-                    src={resolveAssetPath(testimonial.avatar)}
+                {testimonial.avatar ? (
+                  <ResponsiveImage
+                    src={testimonial.avatar}
                     alt={testimonial.name ? `${testimonial.name} testimonial` : 'Customer testimonial'}
                     {...getImageLoadingProps({ aboveFold: true })}
                   />
-                )}
+                ) : null}
                 <blockquote>
                   {testimonial.quote}
                 </blockquote>

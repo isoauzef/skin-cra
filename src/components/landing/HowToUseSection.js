@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, getImageLoadingProps } from './utils';
+import { getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function HowToUseSection({ howToUse }) {
   if (!howToUse) {
@@ -24,13 +25,13 @@ function HowToUseSection({ howToUse }) {
             {steps.map((step) => (
               <li key={step.label}>
                 <div className="how-to__step-card">
-                  {step.image?.src && (
-                    <img
-                      src={resolveAssetPath(step.image.src)}
+                  {step.image?.src ? (
+                    <ResponsiveImage
+                      src={step.image.src}
                       alt={step.image.alt || step.label}
                       {...getImageLoadingProps()}
                     />
-                  )}
+                  ) : null}
                   <div>
                     <h3>{step.label}</h3>
                     <p>{step.description}</p>
@@ -40,14 +41,14 @@ function HowToUseSection({ howToUse }) {
             ))}
           </ol>
         )}
-        {animation?.src && (
-          <img
+        {animation?.src ? (
+          <ResponsiveImage
             className="how-to__animation"
-            src={resolveAssetPath(animation.src)}
+            src={animation.src}
             alt={animation.alt || title}
             {...getImageLoadingProps()}
           />
-        )}
+        ) : null}
       </div>
     </section>
   );

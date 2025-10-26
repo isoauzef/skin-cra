@@ -963,9 +963,6 @@ function Dashboard() {
           {isAuthenticating ? 'Signing in…' : 'Sign In'}
         </button>
       </form>
-      <p className="dashboard__auth-hint">
-        Update <code>ADMIN_EMAIL</code> and <code>ADMIN_PASSWORD</code> in your environment file to control access.
-      </p>
     </div>
   );
 

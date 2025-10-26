@@ -1,0 +1,22 @@
+.order-completed-page {
+  display: grid;
+  gap: 3rem;
+  background: #fff7f5;
+  min-height: 100vh;
+}
+
+.order-completed-page__status {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  color: #475467;
+}
+
+.order-completed-page__status--error {
+  color: #b42318;
+}
+
+.order-completed-page__content {
+  max-width: 960px;
+  margin: 0 auto 4rem;
+  padding: 0 1.5rem;
+}

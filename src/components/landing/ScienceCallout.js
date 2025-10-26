@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, getImageLoadingProps } from './utils';
+import { getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function ScienceCallout({ scienceCallout }) {
   if (!scienceCallout) {
@@ -17,9 +18,9 @@ function ScienceCallout({ scienceCallout }) {
       {!!images.length && (
         <div className="science__gallery">
           {images.map((image) => (
-            <img
+            <ResponsiveImage
               key={image.src}
-              src={resolveAssetPath(image.src)}
+              src={image.src}
               alt={image.alt || title}
               {...getImageLoadingProps()}
             />

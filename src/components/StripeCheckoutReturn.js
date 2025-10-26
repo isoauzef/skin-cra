@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import ResponsiveImage from './landing/ResponsiveImage';
+import './StripeCheckout.css';
 
 const STATUS = {
   loading: 'loading',
@@ -307,7 +309,7 @@ function StripeCheckoutReturn({ sessionId, apiBase, thankYou, onRequestClose }) 
       </div>
       {image?.src ? (
         <div className="checkout-thankyou__media">
-          <img
+          <ResponsiveImage
             src={image.src}
             alt={image.alt || 'Thank you illustration'}
             className="checkout-thankyou__image"

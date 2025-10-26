@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, isExternalUrl, getImageLoadingProps } from './utils';
+import { isExternalUrl, getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function FooterSection({ footer }) {
   if (!footer) {
@@ -45,14 +46,14 @@ function FooterSection({ footer }) {
             </ul>
           </div>
         )}
-        {paymentImage?.src && (
-          <img
+        {paymentImage?.src ? (
+          <ResponsiveImage
             className="landing-footer__payment"
-            src={resolveAssetPath(paymentImage.src)}
+            src={paymentImage.src}
             alt={paymentImage.alt || 'Payment methods'}
             {...getImageLoadingProps()}
           />
-        )}
+        ) : null}
       </div>
       {copyright && <p className="landing-footer__copyright">{copyright}</p>}
     </footer>

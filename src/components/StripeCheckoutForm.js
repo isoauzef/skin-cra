@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { PaymentElement, useCheckout } from '@stripe/react-stripe-js/checkout';
+import ResponsiveImage from './landing/ResponsiveImage';
+import './StripeCheckout.css';
 
 const STATUS = {
   idle: 'idle',
@@ -231,7 +233,7 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
           </div>
           <div className="checkout-summary__aside">
             {selectedOption.imageSrc ? (
-              <img
+              <ResponsiveImage
                 className="checkout-summary__image"
                 src={selectedOption.imageSrc}
                 alt={selectedOption.imageAlt || `${selectedOption.name || 'Selected'} product image`}

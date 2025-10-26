@@ -61,7 +61,7 @@ const buildReturnUrl = (req) => {
   const requestHost = req.get('host');
   const fallbackBase = originHeader || (requestHost ? `${req.protocol}://${requestHost}` : 'http://localhost:3000');
   const baseUrl = (configuredBase || fallbackBase || 'http://localhost:3000').replace(/\/$/, '');
-  return `${baseUrl}/complete?session_id={CHECKOUT_SESSION_ID}`;
+  return `${baseUrl}/order-completed?session_id={CHECKOUT_SESSION_ID}`;
 };
 
 const buildLineItems = (payload, defaults) => {

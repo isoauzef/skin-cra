@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import useLandingContent from '../hooks/useLandingContent';
 import {
   BrandingStrip,
@@ -14,17 +14,12 @@ import {
   FaqSection,
   FinalCtaSection,
   FooterSection,
-  CheckoutSection,
 } from '../components/landing';
 import './LandingPage.css';
 
 function LandingPage() {
   const { content, isLoading, error } = useLandingContent();
-  const hasCheckoutReturn = useMemo(() => {
-    return new URLSearchParams(window.location.search).has('session_id');
-  }, []);
   const checkoutEnabled = Boolean(content?.checkout);
-  const checkoutSectionRef = useRef(null);
 
   useEffect(() => {
     const routeHandler = (event) => {
@@ -54,25 +49,9 @@ function LandingPage() {
     };
   }, []);
 
-  const scrollToCheckout = useCallback(() => {
-    if (!checkoutEnabled) {
-      return;
-    }
-
-    checkoutSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [checkoutEnabled]);
-
-  const handleOpenCheckout = useCallback(() => {
-    scrollToCheckout();
-  }, [scrollToCheckout]);
-
-  useEffect(() => {
-    if (!checkoutEnabled || !hasCheckoutReturn) {
-      return;
-    }
-
-    checkoutSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [checkoutEnabled, hasCheckoutReturn]);
+  const handleNavigateToProducts = useCallback(() => {
+    window.location.href = '/products';
+  }, []);
 
   const body = useMemo(() => {
     if (isLoading) {
@@ -96,17 +75,14 @@ function LandingPage() {
         <BrandingStrip branding={content.branding} />
         <HeroSection
           hero={content.hero}
-          onPrimaryCtaClick={checkoutEnabled ? handleOpenCheckout : undefined}
-          onSecondaryCtaClick={checkoutEnabled ? handleOpenCheckout : undefined}
+          onPrimaryCtaClick={checkoutEnabled ? handleNavigateToProducts : undefined}
+          onSecondaryCtaClick={checkoutEnabled ? handleNavigateToProducts : undefined}
         />
-        {checkoutEnabled ? (
-          <CheckoutSection ref={checkoutSectionRef} checkout={content.checkout} />
-        ) : null}
         <BenefitsSection benefits={content.benefits} />
         <ScienceCallout scienceCallout={content.scienceCallout} />
         <IngredientsSection
           ingredients={content.ingredients}
-          onCtaClick={checkoutEnabled ? handleOpenCheckout : undefined}
+          onCtaClick={checkoutEnabled ? handleNavigateToProducts : undefined}
         />
         <ResultsSection results={content.results} />
         <TestimonialsSection testimonials={content.testimonials} />
@@ -116,12 +92,12 @@ function LandingPage() {
         <FaqSection faq={content.faq} />
         <FinalCtaSection
           finalCta={content.finalCta}
-          onCtaClick={checkoutEnabled ? handleOpenCheckout : undefined}
+          onCtaClick={checkoutEnabled ? handleNavigateToProducts : undefined}
         />
         <FooterSection footer={content.footer} />
       </>
     );
-  }, [checkoutEnabled, content, error, handleOpenCheckout, isLoading]);
+  }, [checkoutEnabled, content, error, handleNavigateToProducts, isLoading]);
 
   return (
     <main className="landing-page" data-landing-root>

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, isExternalUrl, getImageLoadingProps } from './utils';
+import { isExternalUrl, getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function IngredientsSection({ ingredients, onCtaClick }) {
   if (!ingredients) {
@@ -25,13 +26,13 @@ function IngredientsSection({ ingredients, onCtaClick }) {
           <p>{primaryCard.description}</p>
         </article>
         <aside className="ingredients__panel ingredients__panel--media">
-          {primaryCard.image?.src && (
-            <img
-              src={resolveAssetPath(primaryCard.image.src)}
+          {primaryCard.image?.src ? (
+            <ResponsiveImage
+              src={primaryCard.image.src}
               alt={primaryCard.image.alt || primaryCard.name}
               {...getImageLoadingProps()}
             />
-          )}
+          ) : null}
         </aside>
       </div>
       {(cta?.href || ctaSupportCopy) && (

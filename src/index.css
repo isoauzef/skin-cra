@@ -1,1 +1,17 @@
-/* Global styles are managed by the legacy stylesheet in public/assets/css/style.css. */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+}
+
+img,
+video,
+canvas,
+svg {
+	max-width: 100%;
+	height: auto;
+}

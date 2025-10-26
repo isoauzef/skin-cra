@@ -11,7 +11,7 @@
     "saleBanners": [
       {
         "id": "sale",
-        "message": "AUTUMN SALE: Up to 70% Off & FREE Shipping Today ONLY!"
+        "message": "LIMITED TIME OFFER: Up to 30% Off & FREE Shipping Today ONLY!"
       }
     ],
     "reviewBadge": {
@@ -22,9 +22,9 @@
     }
   },
   "hero": {
-    "headline": "5in1 facial serum",
+    "headline": "5in1 Facial Serum",
     "subheadline": "For visibly firmer and radiant skin in just 2 weeks",
-    "description": "5in1 Facial Serum is like a non-invasive face lift that gives you a youthful glow and visibly reduces fine lines and wrinkles. It transforms dry, sun-damaged skin into a younger, more even complexion in just a few weeks.",
+    "description": "5in1 facial serum is a non-invasive face lift that gives you a youthful glow and visibly reduces fine lines and wrinkles. It tightens & transforms dry, sun-damaged skin into a younger, more even complexion in just a few weeks.",
     "bullets": [
       "Enjoy a perfect skin tone",
       "Smooth, youthful skin that lasts",
@@ -70,7 +70,7 @@
     "testimonial": {
       "name": "Susan E.",
       "rating": 5,
-      "quote": "\"With such offers I have often been disappointed. But after the shortest time the skin is firmer, more radiant, and my wrinkles no longer feel so deep. I am curious how it will feel after taking the serum for a longer time.\"",
+      "quote": "\"As a 65 year old woman, I have been trying facial products for years now... I mean years... I can't believe I have finally found a product that actually works! How things have changed. Great job doctors!\"",
       "avatar": "/uploads/woman1-1761290011105-77563879.png"
     },
     "reviewHighlightImage": {
@@ -84,24 +84,24 @@
     "title": "Helps to reduce...",
     "items": [
       {
-        "title": "Fine lines and wrinkles",
-        "description": "Argireline stimulates collagen and reduces fine lines and wrinkles.",
+        "title": "Dry and pale skin",
+        "description": "Niacinamide, collagen peptides, and antioxidants moisturize and nourish your skin.",
         "image": {
           "src": "assets/img/a.jpg",
           "alt": "Close-up of smooth skin"
         }
       },
       {
-        "title": "Dry and pale skin",
-        "description": "Botulinum toxin, collagen peptides, and antioxidants moisturize and nourish your skin.",
+        "title": "Uneven skin tone",
+        "description": "Peptides promote exfoliation and regeneration to reduce hyperpigmentation for a more even tone.",
         "image": {
           "src": "assets/img/b.png",
           "alt": "Hydrated skin illustration"
         }
       },
       {
-        "title": "Uneven skin tone",
-        "description": "Peptides promote exfoliation and regeneration to reduce hyperpigmentation for a more even tone.",
+        "title": "Fine lines and wrinkles",
+        "description": "Hyaluronic acid mixed with vitamin E & C stimulates collagen and reduces fine lines and wrinkles.",
         "image": {
           "src": "assets/img/c.jpg",
           "alt": "Even skin tone illustration"
@@ -128,8 +128,8 @@
     "subtitle": "Results you can see immediately, with confidence that lasts a lifetime.",
     "cards": [
       {
-        "name": "Botulinum toxin",
-        "description": "This 5-in-1 Vitamin C Face Serum is formulated with natural ingredients like Vitamin C, Hyaluronic Acid, Niacinamide, and Collagen, offering anti-aging, whitening, moisturizing, and pore-shrinking benefits. Suitable for all skin types, it targets face, neck, hands, and body, providing rejuvenating and firming effects.",
+        "name": "All-In-One Formula",
+        "description": "This 5-in-1 Facial Serum is formulated with natural ingredients like Vitamin C, Hyaluronic Acid, Niacinamide, and Collagen, offering anti-aging, whitening, moisturizing, and pore-shrinking benefits. Suitable for all skin types, it targets face, neck, hands, and body, providing rejuvenating and firming effects.",
         "image": {
           "src": "assets/img/5-img.png",
           "alt": "Botulinum toxin ingredient"
@@ -148,7 +148,7 @@
     "stories": [
       {
         "name": "Barbara E.",
-        "quote": "After just a few weeks my wrinkles began to fade and my skin became noticeably firmer and more radiant. I finally feel comfortable in my skin again!",
+        "quote": "It's like I'm putting on make up without putting on make up. I finally feel comfortable in my skin again!",
         "image": {
           "src": "assets/img/ba1.png",
           "alt": "Barbara after using serum"
@@ -156,7 +156,7 @@
       },
       {
         "name": "Alexandra N.",
-        "quote": "The serum reduced fine lines and improved the overall texture and firmness of my skin. Friends keep complimenting my complexion.",
+        "quote": "Product actually works and works great! My husband thinks I got a facelift and loves the new me, really loves!",
         "image": {
           "src": "assets/img/ba2.png",
           "alt": "Alexandra after using serum"
@@ -164,7 +164,7 @@
       },
       {
         "name": "Maria L.",
-        "quote": "My skin feels firmer, smoother, and years younger. No other product has made a difference like this.",
+        "quote": "My skin actually changed in front of my eyes, every morning I noticed a difference until I was unnoticeable. No other product has made a difference like this.",
         "image": {
           "src": "assets/img/ba3.png",
           "alt": "Maria after using serum"
@@ -172,7 +172,7 @@
       },
       {
         "name": "Claudia O.",
-        "quote": "My skin looks and feels revitalized and I have regained my youthful glow. It is like a fountain of youth in a box!",
+        "quote": "I have uploaded my before and after. How is this possible! 3 bottles was all it took... You could see it working right in front of your eyes. ",
         "image": {
           "src": "assets/img/ba4.png",
           "alt": "Claudia smiling after treatment"
@@ -186,7 +186,7 @@
       {
         "name": "Samantha G.",
         "badge": "Verified customer",
-        "quote": "\"I have always struggled with my skin, especially wrinkles and oiliness. After a few weeks my fine lines are less noticeable and my skin looks healthier and balanced.\"",
+        "quote": "\"I have always struggled with skincare products, never helped me. But this new product in just a few weeks changed my skin tone drastically and my make up actually stays on after applying serum.\"",
         "image": {
           "src": "assets/img/t1.png",
           "alt": "Samantha using serum"
@@ -195,7 +195,7 @@
       {
         "name": "Michelle B.",
         "badge": "Verified customer",
-        "quote": "\"Within a month I noticed a significant difference in texture and appearance. Argireline and botulinum toxin combat my crow's feet and forehead wrinkles like nothing else.\"",
+        "quote": "\"Wow is all I could say! Everyone thinks I've gotten Botox or some sort of a surgical procedure. I guess mixing the high active ingredients did the trick.\"",
         "image": {
           "src": "assets/img/t2.png",
           "alt": "Michelle showing results"
@@ -204,7 +204,7 @@
       {
         "name": "Karen F.",
         "badge": "Verified customer",
-        "quote": "\"After a few weeks the fine lines around my eyes softened and the overall tone and texture of my skin improved. I feel confident without makeup!\"",
+        "quote": "\"Okay so I saw this product on TV, of course I didn't believe it worked, but the money back guarantee kind a sucked me in. In 3 days look at my before and after. Amazing product! Thank you thank you thank you! \"",
         "image": {
           "src": "assets/img/t3.png",
           "alt": "Karen after using serum"
@@ -273,7 +273,7 @@
     "body": "Every product is covered by our 90 Day Money Back Guarantee. Try it for 90 days and if you are not completely satisfied, for any reason, send it back and we will refund the full amount of your purchase.",
     "contact": {
       "email": "support@example.com",
-      "phone": "(754) 227-6438"
+      "phone": ""
     },
     "image": {
       "src": "assets/img/money-back.png",
@@ -293,11 +293,11 @@
       },
       {
         "question": "How much longer will the sale be on for?",
-        "answer": "The sale ends once we run out of stock. After that it will take 30 days to restock and prices return to full price. Remaining units: 28."
+        "answer": "The sale ends once we run out of stock. After that it will take 30 days to restock and prices return to full price."
       },
       {
         "question": "Where does this fall in my skincare routine?",
-        "answer": "Apply the serum as step two, after cleansing and before moisturizing."
+        "answer": "Apply the serum as step two, after cleansing and before moisturizing twice a day."
       },
       {
         "question": "What if I am not happy with the results?",
@@ -309,7 +309,7 @@
     "headline": "Last chance to grab this limited special offer",
     "subheadline": "Instant online discount today!",
     "cta": {
-      "label": "Get 70% Discount Now",
+      "label": "Get A 30% Discount Now",
       "href": "#"
     },
     "supportingCopy": "Available online only | While supplies last. Free Shipping | 90 Day Money-Back Guarantee."
@@ -328,7 +328,7 @@
         "id": "single-bottle",
         "name": "Single Bottle",
         "description": "30-day supply | Perfect for first-time results",
-        "price": 50,
+        "price": 1,
         "currency": "usd",
         "quantity": 1,
         "badge": "Starter",
@@ -345,12 +345,12 @@
         "id": "double-bundle",
         "name": "2 Bottle Bundle",
         "description": "60-day supply | Keep your glow going",
-        "price": 80,
+        "price": 1,
         "currency": "usd",
         "quantity": 1,
         "badge": "Most Popular",
         "bestValue": true,
-        "subcopy": "Save 10% compared to a single bottle.",
+        "subcopy": "Save 20% compared to a single bottle.",
         "metadata": {
           "sku": "serum-double"
         },
@@ -363,11 +363,11 @@
         "id": "triple-bundle",
         "name": "3 Bottle Bundle",
         "description": "90-day supply | Transform your routine",
-        "price": 120,
+        "price": 3,
         "currency": "usd",
         "quantity": 1,
         "badge": "Best Value",
-        "subcopy": "Save 20% and lock in your progress.",
+        "subcopy": "Save 30% and lock in your progress.",
         "metadata": {
           "sku": "serum-triple"
         },
@@ -481,6 +481,6 @@
       "src": "/assets/img/payment.png",
       "alt": "Accepted payment icons"
     },
-    "copyright": "Copyright 2024. All rights reserved."
+    "copyright": "Copyright 2025. All rights reserved."
   }
 }

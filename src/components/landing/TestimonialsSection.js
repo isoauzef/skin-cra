@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, getImageLoadingProps } from './utils';
+import { getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function TestimonialsSection({ testimonials }) {
   if (!testimonials) {
@@ -18,13 +19,13 @@ function TestimonialsSection({ testimonials }) {
       <div className="testimonials__grid">
         {cards.map((card) => (
           <article key={card.name} className="testimonials__card">
-            {card.image?.src && (
-              <img
-                src={resolveAssetPath(card.image.src)}
+            {card.image?.src ? (
+              <ResponsiveImage
+                src={card.image.src}
                 alt={card.image.alt || card.name}
                 {...getImageLoadingProps()}
               />
-            )}
+            ) : null}
             <div className="testimonials__meta">
               <h3>{card.name}</h3>
               {card.badge && <span className="testimonials__badge">{card.badge}</span>}

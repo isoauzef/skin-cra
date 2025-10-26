@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, getImageLoadingProps } from './utils';
+import { getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function BrandingStrip({ branding }) {
   if (!branding) {
@@ -11,14 +12,14 @@ function BrandingStrip({ branding }) {
   return (
     <header className="branding-strip" data-landing-part="branding">
       <div className="branding-strip__inner">
-        {logo?.src && (
-          <img
+        {logo?.src ? (
+          <ResponsiveImage
             className="branding-strip__logo"
-            src={resolveAssetPath(logo.src)}
+            src={logo.src}
             alt={logo.alt || 'Brand logo'}
             {...getImageLoadingProps({ aboveFold: true })}
           />
-        )}
+        ) : null}
 
         <div className="branding-strip__messages">
           {saleBanners.map((banner) => (
@@ -28,17 +29,17 @@ function BrandingStrip({ branding }) {
           ))}
         </div>
 
-        {reviewBadge?.image && (
+        {reviewBadge?.image ? (
           <div className="branding-strip__review" aria-label="Product rating">
-            <img
-              src={resolveAssetPath(reviewBadge.image)}
+            <ResponsiveImage
+              src={reviewBadge.image}
               alt={reviewBadge.alt || 'Rating badge'}
               {...getImageLoadingProps({ aboveFold: true })}
             />
             <span>{reviewBadge.ratingLabel}</span>
             <span>{reviewBadge.reviewCountLabel}</span>
           </div>
-        )}
+        ) : null}
       </div>
     </header>
   );

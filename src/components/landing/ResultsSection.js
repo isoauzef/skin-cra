@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { resolveAssetPath, getImageLoadingProps } from './utils';
+import { getImageLoadingProps } from './utils';
+import ResponsiveImage from './ResponsiveImage';
 
 function ResultsSection({ results }) {
   if (!results) {
@@ -21,13 +22,13 @@ function ResultsSection({ results }) {
       <div className="results__grid">
         {stories.map((story) => (
           <article key={story.name} className="results__card">
-            {story.image?.src && (
-              <img
-                src={resolveAssetPath(story.image.src)}
+            {story.image?.src ? (
+              <ResponsiveImage
+                src={story.image.src}
                 alt={story.image.alt || story.name}
                 {...getImageLoadingProps()}
               />
-            )}
+            ) : null}
             <blockquote>{story.quote}</blockquote>
             <h3>{story.name}</h3>
           </article>

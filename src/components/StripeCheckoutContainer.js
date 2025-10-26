@@ -4,7 +4,9 @@ import { CheckoutProvider } from '@stripe/react-stripe-js/checkout';
 import { loadStripe } from '@stripe/stripe-js';
 import StripeCheckoutForm from './StripeCheckoutForm';
 import StripeCheckoutReturn from './StripeCheckoutReturn';
+import './StripeCheckout.css';
 import { resolveAssetPath } from './landing/utils';
+import ResponsiveImage from './landing/ResponsiveImage';
 
 const DEFAULT_METADATA = { source: 'skin-cra-demo' };
 
@@ -28,7 +30,13 @@ const formatCurrency = (amount, currency = 'usd') => {
   }
 };
 
-function StripeCheckoutContainer({ checkout, onRequestClose, displayMode = 'modal' }) {
+function StripeCheckoutContainer({
+  checkout,
+  onRequestClose,
+  displayMode = 'modal',
+  forceSelectedOptionId = null,
+  hideInlineOptions = false,
+}) {
   const productOptions = useMemo(
     () => (Array.isArray(checkout?.options) ? checkout.options.filter(Boolean) : []),
     [checkout?.options],
@@ -37,13 +45,17 @@ function StripeCheckoutContainer({ checkout, onRequestClose, displayMode = 'moda
   const isInline = displayMode === 'inline';
 
   const defaultOptionId = useMemo(() => {
+    if (forceSelectedOptionId && productOptions.some((option) => option?.id === forceSelectedOptionId)) {
+      return forceSelectedOptionId;
+    }
+
     if (!hasProductOptions) {
       return null;
     }
 
     const preferred = productOptions.find((option) => option?.bestValue || option?.default);
     return preferred?.id || productOptions[0]?.id || null;
-  }, [hasProductOptions, productOptions]);
+  }, [forceSelectedOptionId, hasProductOptions, productOptions]);
 
   const [clientSecret, setClientSecret] = useState('');
   const [message, setMessage] = useState(hasProductOptions ? '' : 'Preparing checkout…');
@@ -310,11 +322,15 @@ function StripeCheckoutContainer({ checkout, onRequestClose, displayMode = 'moda
   }, [buildPayload, clientSecret, hasProductOptions, isInline, isReturnView, requestClientSecret, selectedOption]);
 
   const handleOptionChange = useCallback((event) => {
+    if (forceSelectedOptionId) {
+      return;
+    }
+
     setSelectedOptionId(event.target.value);
     setSelectionError('');
     setMessage('');
     lastFetchedOptionRef.current = null;
-  }, []);
+  }, [forceSelectedOptionId]);
 
   const handleOptionSubmit = useCallback(async () => {
     if (!selectedOption) {
@@ -411,7 +427,7 @@ function StripeCheckoutContainer({ checkout, onRequestClose, displayMode = 'moda
         {optionImageSrc ? (
           <div className="checkout-option__layout">
             <div className="checkout-option__media">
-              <img
+              <ResponsiveImage
                 src={optionImageSrc}
                 alt={optionImageAlt}
                 className="checkout-option__image"
@@ -435,9 +451,12 @@ function StripeCheckoutContainer({ checkout, onRequestClose, displayMode = 'moda
         <div className="stripe-status-message" role="status">{message || 'Preparing checkout…'}</div>
       );
     } else if (!clientSecret) {
+      const inlineFallbackMessage = hideInlineOptions
+        ? selectionError || message || 'Preparing checkout…'
+        : selectionError || message || 'Select a package to load checkout.';
       formContent = (
         <div className="stripe-status-message" role={selectionError ? 'alert' : 'status'}>
-          {selectionError || message || 'Select a package to load checkout.'}
+          {inlineFallbackMessage}
         </div>
       );
     } else {
@@ -478,6 +497,14 @@ function StripeCheckoutContainer({ checkout, onRequestClose, displayMode = 'moda
         <CheckoutProvider stripe={stripePromise} options={{ clientSecret, elementsOptions: { appearance } }}>
           <StripeCheckoutForm selectedOption={selectedOptionSummary} />
         </CheckoutProvider>
+      );
+    }
+
+    if (hideInlineOptions) {
+      return (
+        <div className="checkout-inline__form-only">
+          <div className="checkout-inline__column checkout-inline__column--form">{formContent}</div>
+        </div>
       );
     }
 
@@ -626,6 +653,8 @@ StripeCheckoutContainer.propTypes = {
   }),
   onRequestClose: PropTypes.func,
   displayMode: PropTypes.oneOf(['modal', 'inline']),
+  forceSelectedOptionId: PropTypes.string,
+  hideInlineOptions: PropTypes.bool,
 };
 
 export default StripeCheckoutContainer;
