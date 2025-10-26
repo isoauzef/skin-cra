@@ -92,7 +92,8 @@
 
 .product-card__media img {
   width: 100%;
-  max-width: 160px;
+  height: 240px;
+  width: auto;
   border-radius: 1rem;
   box-shadow: 0 14px 26px rgba(16, 24, 40, 0.14);
 }

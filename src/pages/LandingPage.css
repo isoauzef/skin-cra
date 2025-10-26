@@ -310,7 +310,7 @@
 
 .ingredients__panel {
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .ingredients__panel--copy {
@@ -472,8 +472,9 @@
 .results__card h3 {
   font-size: 1rem;
 }
-.results__card blockquote {
-    margin-bottom: 0 !important;
+blockquote {
+    margin: 0;
+    font-size: 14px;
 }
 .results__card img {
   width: 100%;
@@ -497,7 +498,7 @@
 .testimonials__card {
   border: solid 1px #E5B5B2;
   border-radius: 1rem;
-  padding: 1.75rem;
+  padding: .75rem;
   display: grid;
   gap: 1rem;
 }
