@@ -200,7 +200,8 @@ function StripeCheckoutContainer({
       }
 
       try {
-        const response = await fetch(`${apiBase}/create-checkout-session`, {
+        const baseUrl = apiBase || '/api';
+        const response = await fetch(`${baseUrl}/create-checkout-session`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

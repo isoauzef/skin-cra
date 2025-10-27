@@ -108,8 +108,10 @@ function StripeCheckoutReturn({ sessionId, apiBase, thankYou, onRequestClose }) 
   const thankYouContent = useMemo(() => sanitizeThankYouContent(thankYou), [thankYou]);
 
   const requestUrl = useMemo(() => {
-    const base = apiBase || '';
-    const baseWithSlash = base ? `${base}/session-status` : '/session-status';
+    const trimmedBase = typeof apiBase === 'string' && apiBase.trim()
+      ? apiBase.trim().replace(/\/$/, '')
+      : '/api';
+    const baseWithSlash = `${trimmedBase}/session-status`;
     return `${baseWithSlash}?session_id=${encodeURIComponent(sessionId || '')}`;
   }, [apiBase, sessionId]);
 

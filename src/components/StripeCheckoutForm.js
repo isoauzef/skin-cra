@@ -73,7 +73,7 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions, sessionId, apiBas
     (endpoint) => {
       const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
       if (!apiUrlBase) {
-        return normalizedEndpoint;
+        return `/api${normalizedEndpoint}`;
       }
       return `${apiUrlBase}${normalizedEndpoint}`;
     },
@@ -300,14 +300,20 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions, sessionId, apiBas
 
         if (!response.ok) {
           const payload = await response.json().catch(() => null);
-          throw new Error(payload?.error || 'Unable to save phone number.');
+          const error = new Error(payload?.error || 'Unable to save phone number.');
+          error.status = response.status;
+          throw error;
         }
 
         lastSavedPhoneRef.current = targetPhone;
-        return true;
+        return { ok: true };
       } catch (error) {
         console.warn('Failed to persist checkout phone metadata.', error);
-        return false;
+        return {
+          ok: false,
+          status: typeof error?.status === 'number' ? error.status : undefined,
+          message: error?.message || 'Unable to save phone number.',
+        };
       } finally {
         setIsSavingPhone(false);
       }
@@ -440,16 +446,18 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions, sessionId, apiBas
       }
 
       const nextPhone = phoneValue.trim();
-      const didPersistPhone = await persistPhoneMetadata(nextPhone);
+      const phonePersistResult = await persistPhoneMetadata(nextPhone);
 
-      if (!didPersistPhone) {
-        setPhoneError(nextPhone ? 'Unable to save phone number.' : '');
+      if (!phonePersistResult.ok) {
         if (nextPhone) {
+          setPhoneError('Unable to save phone number.');
           setStatus(STATUS.error);
-          setMessage('Unable to save phone number.');
+          setMessage(phonePersistResult.message || 'Unable to save phone number.');
           return;
         }
-      }
+
+        setPhoneError('');
+        }
 
       if (nextPhone) {
         const didSyncPhone = await syncPhoneWithCheckout(nextPhone);
