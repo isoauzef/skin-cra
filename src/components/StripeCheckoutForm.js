@@ -472,14 +472,7 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions, sessionId, apiBas
 
       setPhoneError('');
 
-      const confirmResult = await checkout.confirm({
-        metadata: nextPhone
-          ? {
-              customer_phone: nextPhone,
-              phone_number: nextPhone,
-            }
-          : undefined,
-      });
+      const confirmResult = await checkout.confirm();
 
       if (confirmResult.type === 'error') {
         setStatus(STATUS.error);

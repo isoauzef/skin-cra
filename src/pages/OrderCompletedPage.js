@@ -12,7 +12,11 @@ function OrderCompletedPage() {
 
   const apiBase = useMemo(() => {
     const configured = process.env.REACT_APP_API_BASE_URL ? process.env.REACT_APP_API_BASE_URL.trim() : '';
-    return configured ? configured.replace(/\/$/, '') : '';
+    if (configured) {
+      return configured.replace(/\/$/, '');
+    }
+
+    return '/api';
   }, []);
 
   if (isLoading) {
