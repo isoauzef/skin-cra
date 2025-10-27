@@ -386,33 +386,20 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions, sessionId, apiBas
 
   const handlePhoneBlur = useCallback(async () => {
     const trimmed = phoneValue.trim();
-    const targetPhone = trimmed || null;
 
-    if (targetPhone === lastSavedPhoneRef.current) {
+    if (!trimmed) {
+      setPhoneError('');
       return;
     }
 
-    const didPersist = await persistPhoneMetadata(trimmed);
+    const didSync = await syncPhoneWithCheckout(trimmed);
 
-    if (didPersist) {
-      if (trimmed) {
-        const didSync = await syncPhoneWithCheckout(trimmed);
-
-        if (!didSync) {
-          setPhoneError('Unable to sync phone number.');
-          return;
-        }
-      }
-
-      lastSavedPhoneRef.current = targetPhone;
-      setPhoneError('');
-    } else if (trimmed) {
-      setPhoneError('Unable to save phone number.');
+    if (!didSync) {
+      setPhoneError('Unable to sync phone number.');
     } else {
-      lastSavedPhoneRef.current = null;
       setPhoneError('');
     }
-  }, [persistPhoneMetadata, phoneValue, syncPhoneWithCheckout]);
+  }, [phoneValue, syncPhoneWithCheckout]);
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -453,35 +440,38 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions, sessionId, apiBas
       }
 
       const nextPhone = phoneValue.trim();
-      const targetPhone = nextPhone || null;
-      const needsPhoneSync = targetPhone !== lastSavedPhoneRef.current;
+      const didPersistPhone = await persistPhoneMetadata(nextPhone);
 
-      if (needsPhoneSync) {
-        const didPersistPhone = await persistPhoneMetadata(nextPhone);
-
-        if (!didPersistPhone && nextPhone) {
-          setPhoneError('Unable to save phone number.');
+      if (!didPersistPhone) {
+        setPhoneError(nextPhone ? 'Unable to save phone number.' : '');
+        if (nextPhone) {
           setStatus(STATUS.error);
           setMessage('Unable to save phone number.');
           return;
         }
-
-        if (nextPhone) {
-          const didSyncPhone = await syncPhoneWithCheckout(nextPhone);
-
-          if (!didSyncPhone) {
-            setPhoneError('Unable to sync phone number.');
-            setStatus(STATUS.error);
-            setMessage('Unable to sync phone number.');
-            return;
-          }
-        }
-
-        lastSavedPhoneRef.current = targetPhone;
-        setPhoneError('');
       }
 
-      const confirmResult = await checkout.confirm();
+      if (nextPhone) {
+        const didSyncPhone = await syncPhoneWithCheckout(nextPhone);
+
+        if (!didSyncPhone) {
+          setPhoneError('Unable to sync phone number.');
+          setStatus(STATUS.error);
+          setMessage('Unable to sync phone number.');
+          return;
+        }
+      }
+
+      setPhoneError('');
+
+      const confirmResult = await checkout.confirm({
+        metadata: nextPhone
+          ? {
+              customer_phone: nextPhone,
+              phone_number: nextPhone,
+            }
+          : undefined,
+      });
 
       if (confirmResult.type === 'error') {
         setStatus(STATUS.error);
