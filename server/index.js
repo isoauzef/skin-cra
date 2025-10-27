@@ -344,7 +344,9 @@ app.put('/api/stripe-secrets', async (req, res) => {
   }
 });
 
-app.post('/create-checkout-session', async (req, res) => {
+const createCheckoutSessionRoutes = ['/create-checkout-session', '/api/create-checkout-session'];
+
+app.post(createCheckoutSessionRoutes, async (req, res) => {
   let stripeClient;
   let settings;
 
@@ -397,7 +399,12 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-app.post('/checkout-session/:sessionId/phone', async (req, res) => {
+const checkoutSessionPhoneRoutes = [
+  '/checkout-session/:sessionId/phone',
+  '/api/checkout-session/:sessionId/phone',
+];
+
+app.post(checkoutSessionPhoneRoutes, async (req, res) => {
   let stripeClient;
 
   try {
