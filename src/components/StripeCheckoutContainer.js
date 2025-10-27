@@ -77,7 +77,7 @@ function StripeCheckoutContainer({
       return configured.replace(/\/$/, '');
     }
 
-    return '/api';
+    return process.env.REACT_APP_API_ROUTE_PREFIX?.replace(/\/$/, '') || '/api';
   }, []);
 
   const isReturnView = Boolean(sessionId);

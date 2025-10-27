@@ -16,7 +16,7 @@ function OrderCompletedPage() {
       return configured.replace(/\/$/, '');
     }
 
-    return '/api';
+    return process.env.REACT_APP_API_ROUTE_PREFIX?.replace(/\/$/, '') || '/api';
   }, []);
 
   if (isLoading) {

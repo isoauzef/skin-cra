@@ -249,7 +249,21 @@ const getStripeClient = async () => {
   return { stripe: client, settings };
 };
 
-app.post('/api/login', (req, res) => {
+const apiPrefix = process.env.API_ROUTE_PREFIX || '/api';
+const normalizedApiPrefix = apiPrefix.replace(/\/$/, '');
+const prefixRoute = (pattern) => {
+  if (!pattern.startsWith('/')) {
+    throw new Error(`Route pattern must start with '/': ${pattern}`);
+  }
+
+  if (!normalizedApiPrefix) {
+    return pattern;
+  }
+
+  return `${normalizedApiPrefix}${pattern}`;
+};
+
+app.post(prefixRoute('/login'), (req, res) => {
   const credentials = extractBasicCredentials(req);
 
   if (!isValidAdminCredentials(credentials)) {
@@ -260,7 +274,7 @@ app.post('/api/login', (req, res) => {
   res.json({ success: true, email: credentials.email });
 });
 
-app.get('/api/content', async (_req, res) => {
+app.get(prefixRoute('/content'), async (_req, res) => {
   try {
     const content = await loadContent();
     res.json(content);
@@ -270,7 +284,7 @@ app.get('/api/content', async (_req, res) => {
   }
 });
 
-app.put('/api/content', async (req, res) => {
+app.put(prefixRoute('/content'), async (req, res) => {
   if (!requireAdminAuth(req, res)) {
     return;
   }
@@ -288,7 +302,7 @@ app.put('/api/content', async (req, res) => {
   }
 });
 
-app.post('/api/upload-image', (req, res) => {
+app.post(prefixRoute('/upload-image'), (req, res) => {
   if (!requireAdminAuth(req, res)) {
     return;
   }
@@ -311,7 +325,7 @@ app.post('/api/upload-image', (req, res) => {
   });
 });
 
-app.get('/api/stripe-secrets', async (req, res) => {
+app.get(prefixRoute('/stripe-secrets'), async (req, res) => {
   if (!requireAdminAuth(req, res)) {
     return;
   }
@@ -324,7 +338,7 @@ app.get('/api/stripe-secrets', async (req, res) => {
   }
 });
 
-app.put('/api/stripe-secrets', async (req, res) => {
+app.put(prefixRoute('/stripe-secrets'), async (req, res) => {
   if (!requireAdminAuth(req, res)) {
     return;
   }
@@ -344,7 +358,10 @@ app.put('/api/stripe-secrets', async (req, res) => {
   }
 });
 
-const createCheckoutSessionRoutes = ['/create-checkout-session', '/api/create-checkout-session'];
+const createCheckoutSessionRoutes = ['/create-checkout-session'];
+if (apiPrefix) {
+  createCheckoutSessionRoutes.push(prefixRoute('/create-checkout-session'));
+}
 
 app.post(createCheckoutSessionRoutes, async (req, res) => {
   let stripeClient;
@@ -399,10 +416,10 @@ app.post(createCheckoutSessionRoutes, async (req, res) => {
   }
 });
 
-const checkoutSessionPhoneRoutes = [
-  '/checkout-session/:sessionId/phone',
-  '/api/checkout-session/:sessionId/phone',
-];
+const checkoutSessionPhoneRoutes = ['/checkout-session/:sessionId/phone'];
+if (apiPrefix) {
+  checkoutSessionPhoneRoutes.push(prefixRoute('/checkout-session/:sessionId/phone'));
+}
 
 app.post(checkoutSessionPhoneRoutes, async (req, res) => {
   let stripeClient;
@@ -490,7 +507,12 @@ app.post(checkoutSessionPhoneRoutes, async (req, res) => {
   }
 });
 
-app.get('/session-status', async (req, res) => {
+const sessionStatusRoutes = ['/session-status'];
+if (normalizedApiPrefix) {
+  sessionStatusRoutes.push(prefixRoute('/session-status'));
+}
+
+app.get(sessionStatusRoutes, async (req, res) => {
   let stripeClient;
 
   try {
