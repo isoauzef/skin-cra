@@ -62,6 +62,7 @@ function StripeCheckoutContainer({
   const [isLoading, setIsLoading] = useState(!hasProductOptions);
   const [selectionError, setSelectionError] = useState('');
   const [selectedOptionId, setSelectedOptionId] = useState(defaultOptionId);
+  const [activeSessionId, setActiveSessionId] = useState('');
   const [sessionId] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get('session_id');
@@ -223,6 +224,7 @@ function StripeCheckoutContainer({
         }
 
         setClientSecret(data.clientSecret);
+        setActiveSessionId(typeof data.sessionId === 'string' ? data.sessionId : '');
         setMessage('');
         setSelectionError('');
         return data.clientSecret;
@@ -231,10 +233,11 @@ function StripeCheckoutContainer({
           return null;
         }
 
-        console.error('Failed to initialize Stripe:', error);
-        const finalMessage = error?.message || 'Unable to prepare checkout.';
-        setClientSecret('');
-        setMessage(finalMessage);
+  console.error('Failed to initialize Stripe:', error);
+  const finalMessage = error?.message || 'Unable to prepare checkout.';
+  setClientSecret('');
+  setActiveSessionId('');
+  setMessage(finalMessage);
 
         if (captureSelectionError) {
           setSelectionError(finalMessage);
@@ -481,21 +484,28 @@ function StripeCheckoutContainer({
           '.Input:focus::placeholder': {
             color: '#a0a0a0',
           },
-          '.BlockLabel': {
-            fontFamily: 'Lato, sans-serif',
-          },
-          '.TabLabel': {
-            fontFamily: 'Lato, sans-serif',
-          },
-          '.Text': {
-            fontFamily: 'Lato, sans-serif',
-          },
         },
       };
 
       formContent = (
-        <CheckoutProvider stripe={stripePromise} options={{ clientSecret, elementsOptions: { appearance } }}>
-          <StripeCheckoutForm selectedOption={selectedOptionSummary} />
+        <CheckoutProvider
+          stripe={stripePromise}
+          options={{
+            clientSecret,
+            elementsOptions: {
+              appearance,
+              savedPaymentMethod: {
+                enableSave: 'never',
+                enableRedisplay: 'never',
+              },
+            },
+          }}
+        >
+          <StripeCheckoutForm
+            selectedOption={selectedOptionSummary}
+            sessionId={activeSessionId}
+            apiBase={apiBase}
+          />
         </CheckoutProvider>
       );
     }
@@ -585,23 +595,28 @@ function StripeCheckoutContainer({
       '.Input:focus::placeholder': {
         color: '#a0a0a0',
       },
-      '.BlockLabel': {
-        fontFamily: 'Lato, sans-serif',
-      },
-      '.TabLabel': {
-        fontFamily: 'Lato, sans-serif',
-      },
-      '.Text': {
-        fontFamily: 'Lato, sans-serif',
-      },
     },
   };
 
   return (
-    <CheckoutProvider stripe={stripePromise} options={{ clientSecret, elementsOptions: { appearance } }}>
+    <CheckoutProvider
+      stripe={stripePromise}
+      options={{
+        clientSecret,
+        elementsOptions: {
+          appearance,
+          savedPaymentMethod: {
+            enableSave: 'never',
+            enableRedisplay: 'never',
+          },
+        },
+      }}
+    >
       <StripeCheckoutForm
         selectedOption={selectedOptionSummary}
         onBackToOptions={hasProductOptions ? handleBackToOptions : undefined}
+        sessionId={activeSessionId}
+        apiBase={apiBase}
       />
     </CheckoutProvider>
   );

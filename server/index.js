@@ -379,7 +379,9 @@ app.post('/create-checkout-session', async (req, res) => {
       ui_mode: 'custom',
       mode: 'payment',
       line_items: buildLineItems({ priceId, description }, defaults),
-      payment_method_types: ['card'],
+      shipping_address_collection: {
+        allowed_countries: ['US'],
+      },
       return_url: buildReturnUrl(req),
       ...(metadata && typeof metadata === 'object' ? { metadata } : {}),
       ...(process.env.STRIPE_ENABLE_AUTOMATIC_TAX === 'true'
@@ -388,30 +390,96 @@ app.post('/create-checkout-session', async (req, res) => {
       expand: ['payment_intent'],
     });
 
-    const paymentIntentId = typeof session.payment_intent === 'string'
-      ? session.payment_intent
-      : session.payment_intent?.id;
-
-    if (paymentIntentId) {
-      try {
-        await stripeClient.paymentIntents.update(paymentIntentId, {
-          payment_method_options: {
-            card: {
-              request_three_d_secure: 'any',
-            },
-          },
-        });
-      } catch (updateError) {
-        console.error('Failed to require 3D Secure on PaymentIntent:', updateError);
-      }
-    } else {
-      console.warn('Unable to enforce 3D Secure: missing payment intent on session', session.id);
-    }
-
     res.json({ clientSecret: session.client_secret, sessionId: session.id });
   } catch (error) {
     console.error('Stripe create checkout session failed:', error);
     res.status(500).json({ error: error.message || 'Unable to create checkout session.' });
+  }
+});
+
+app.post('/checkout-session/:sessionId/phone', async (req, res) => {
+  let stripeClient;
+
+  try {
+    ({ stripe: stripeClient } = await getStripeClient());
+  } catch (error) {
+    console.error('Failed to resolve Stripe client for metadata update:', error);
+    return res.status(500).json({ error: 'Unable to connect to Stripe.' });
+  }
+
+  if (!stripeClient) {
+    return res.status(500).json({ error: 'Stripe secret key is not configured.' });
+  }
+
+  const sessionId = req.params.sessionId;
+
+  if (!sessionId || typeof sessionId !== 'string') {
+    return res.status(400).json({ error: 'Invalid session id.' });
+  }
+
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const rawPhone = typeof body.phoneNumber === 'string' ? body.phoneNumber.trim() : '';
+  const metadataPayload = rawPhone ? rawPhone : '';
+
+  try {
+    const session = await stripeClient.checkout.sessions.retrieve(sessionId, {
+      expand: ['payment_intent'],
+    });
+
+    if (!session) {
+      return res.status(404).json({ error: 'Checkout session not found.' });
+    }
+
+    const nextSessionMetadata = session && session.metadata && typeof session.metadata === 'object'
+      ? { ...session.metadata }
+      : {};
+
+    if (metadataPayload) {
+      nextSessionMetadata.customer_phone = metadataPayload;
+      nextSessionMetadata.phone_number = metadataPayload;
+    } else {
+      if (Object.prototype.hasOwnProperty.call(nextSessionMetadata, 'customer_phone')) {
+        delete nextSessionMetadata.customer_phone;
+      }
+      if (Object.prototype.hasOwnProperty.call(nextSessionMetadata, 'phone_number')) {
+        delete nextSessionMetadata.phone_number;
+      }
+    }
+
+    await stripeClient.checkout.sessions.update(sessionId, {
+      metadata: nextSessionMetadata,
+    });
+
+    const paymentIntent = session.payment_intent && typeof session.payment_intent === 'object'
+      ? session.payment_intent
+      : null;
+
+    if (paymentIntent && paymentIntent.id) {
+      const nextPaymentIntentMetadata = paymentIntent.metadata && typeof paymentIntent.metadata === 'object'
+        ? { ...paymentIntent.metadata }
+        : {};
+
+      if (metadataPayload) {
+        nextPaymentIntentMetadata.customer_phone = metadataPayload;
+        nextPaymentIntentMetadata.phone_number = metadataPayload;
+      } else {
+        if (Object.prototype.hasOwnProperty.call(nextPaymentIntentMetadata, 'customer_phone')) {
+          delete nextPaymentIntentMetadata.customer_phone;
+        }
+        if (Object.prototype.hasOwnProperty.call(nextPaymentIntentMetadata, 'phone_number')) {
+          delete nextPaymentIntentMetadata.phone_number;
+        }
+      }
+
+      await stripeClient.paymentIntents.update(paymentIntent.id, {
+        metadata: nextPaymentIntentMetadata,
+      });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to update checkout session metadata:', error);
+    res.status(500).json({ error: error.message || 'Unable to update phone number.' });
   }
 });
 

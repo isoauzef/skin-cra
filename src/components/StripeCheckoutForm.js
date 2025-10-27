@@ -1,6 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
-import { PaymentElement, useCheckout } from '@stripe/react-stripe-js/checkout';
+import {
+  PaymentElement,
+  ShippingAddressElement,
+  useCheckout,
+} from '@stripe/react-stripe-js/checkout';
 import ResponsiveImage from './landing/ResponsiveImage';
 import './StripeCheckout.css';
 
@@ -10,8 +20,6 @@ const STATUS = {
   success: 'success',
   error: 'error',
 };
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const formatCurrency = (amount, currency = 'usd') => {
   const numericAmount = Number(amount);
@@ -33,60 +41,60 @@ const formatCurrency = (amount, currency = 'usd') => {
   }
 };
 
-const validateEmail = async (email, checkout) => {
-  const trimmedEmail = email.trim();
-
-  if (!trimmedEmail) {
-    return { isValid: false, message: 'Enter your email address.' };
-  }
-
-  if (!EMAIL_REGEX.test(trimmedEmail)) {
-    return { isValid: false, message: 'Enter a valid email address.' };
-  }
-
-  if (!checkout || typeof checkout.updateEmail !== 'function') {
-    return { isValid: true, value: trimmedEmail };
-  }
-
-  try {
-    const result = await checkout.updateEmail({ email: trimmedEmail });
-
-    if (result?.error) {
-      return { isValid: false, message: result.error.message || 'Email is not valid.' };
-    }
-
-    return { isValid: true, value: trimmedEmail };
-  } catch (primaryError) {
-    try {
-      const fallbackResult = await checkout.updateEmail(trimmedEmail);
-
-      if (fallbackResult?.error) {
-        return {
-          isValid: false,
-          message: fallbackResult.error.message || 'Email is not valid.',
-        };
-      }
-
-      return { isValid: true, value: trimmedEmail };
-    } catch (secondaryError) {
-      return {
-        isValid: false,
-        message: secondaryError.message || primaryError.message || 'Unable to validate email.',
-      };
-    }
-  }
-};
-
-function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
+function StripeCheckoutForm({ selectedOption, onBackToOptions, sessionId, apiBase }) {
   const checkoutState = useCheckout();
   const checkout = checkoutState && Object.prototype.hasOwnProperty.call(checkoutState, 'checkout')
     ? checkoutState.checkout
     : null;
   const checkoutStatus = checkoutState?.type || (checkout ? 'ready' : 'loading');
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [status, setStatus] = useState(STATUS.idle);
   const [message, setMessage] = useState('');
+  const [shippingError, setShippingError] = useState('');
+  const [isShippingComplete, setIsShippingComplete] = useState(false);
+  const [isEmailComplete, setIsEmailComplete] = useState(false);
+  const [emailValue, setEmailValue] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [phoneValue, setPhoneValue] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [isSavingPhone, setIsSavingPhone] = useState(false);
+  const lastKnownEmailRef = useRef('');
+  const lastSavedPhoneRef = useRef(null);
+  const syncPhoneWithCheckoutRef = useRef(() => Promise.resolve(true));
+
+  const apiUrlBase = useMemo(() => {
+    const trimmedBase = typeof apiBase === 'string' ? apiBase.trim() : '';
+    if (!trimmedBase) {
+      return '';
+    }
+    return trimmedBase.replace(/\/$/, '');
+  }, [apiBase]);
+
+  const buildApiUrl = useCallback(
+    (endpoint) => {
+      const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+      if (!apiUrlBase) {
+        return normalizedEndpoint;
+      }
+      return `${apiUrlBase}${normalizedEndpoint}`;
+    },
+    [apiUrlBase],
+  );
+
+  const checkoutEmail = checkout?.email || '';
+
+  useEffect(() => {
+    if (!checkoutEmail) {
+      setEmailValue('');
+      setIsEmailComplete(false);
+      setEmailError('');
+      return;
+    }
+
+    lastKnownEmailRef.current = checkoutEmail;
+    setEmailValue(checkoutEmail);
+    setIsEmailComplete(true);
+    setEmailError('');
+  }, [checkoutEmail]);
 
   const isProcessing = status === STATUS.loading;
 
@@ -106,52 +114,305 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
     return '';
   }, [selectedOption]);
 
-  const canSubmit = useMemo(() => {
-    if (!checkout) {
-      return false;
-    }
+  const paymentElementOptions = useMemo(
+    () => ({
+      layout: 'tabs',
+      paymentMethodOrder: ['card'],
+      fields: {
+        billingDetails: {
+          email: 'never',
+          phone: 'never',
+          address: 'never',
+        },
+      },
+    }),
+    [],
+  );
 
-    if (typeof checkout.canConfirm === 'function') {
-      try {
-        return checkout.canConfirm();
-      } catch (error) {
-        console.warn('checkout.canConfirm() failed, falling back to ready state check.', error);
-        return true;
+  const canSubmit = isShippingComplete && isEmailComplete;
+
+  const updateCheckoutEmail = useCallback(
+    async (rawEmail) => {
+      if (!checkout) {
+        return false;
       }
+
+      const normalizedEmail = typeof rawEmail === 'string' ? rawEmail.trim() : '';
+
+      if (!normalizedEmail) {
+        return false;
+      }
+
+      try {
+        await checkout.updateEmail({ email: normalizedEmail });
+        return true;
+      } catch (firstError) {
+        try {
+          await checkout.updateEmail(normalizedEmail);
+          return true;
+        } catch (secondError) {
+          console.warn('Unable to sync email with checkout.', secondError);
+        }
+      }
+
+      return false;
+    },
+    [checkout],
+  );
+
+  const validateEmailValue = useCallback((value) => {
+    if (!value) {
+      return 'Enter your email address.';
     }
 
-    return checkout.canConfirm !== undefined ? Boolean(checkout.canConfirm) : true;
-  }, [checkout]);
+    const normalized = value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const handleEmailBlur = useCallback(async () => {
-    if (!email || !checkout) {
-      return;
+    if (!emailPattern.test(normalized)) {
+      return 'Enter a valid email address.';
     }
 
-    const result = await validateEmail(email, checkout);
+    return '';
+  }, []);
 
-    if (!result.isValid) {
-      setEmailError(result.message || 'Email is not valid.');
-    } else {
-      setEmailError('');
-    }
-  }, [checkout, email]);
-
-  const handleEmailChange = useCallback(
+  const handleShippingChange = useCallback(
     (event) => {
-      setEmail(event.target.value);
+      if (!event) {
+        return;
+      }
 
-      if (emailError) {
-        setEmailError('');
+      if (event.error) {
+        setShippingError(event.error.message || 'Enter a valid shipping address.');
+        setIsShippingComplete(false);
+        return;
+      }
+
+      if (!event.complete) {
+        if (shippingError) {
+          setShippingError('');
+        }
+        setIsShippingComplete(false);
+        return;
+      }
+
+      if (shippingError) {
+        setShippingError('');
       }
 
       if (status === STATUS.error && message) {
         setStatus(STATUS.idle);
         setMessage('');
       }
+
+      setIsShippingComplete(true);
     },
-    [emailError, message, status],
+    [message, shippingError, status],
   );
+
+  const handleEmailChange = useCallback((event) => {
+    const nextRawValue = event?.target?.value ?? '';
+    setEmailValue(nextRawValue);
+
+    if (status === STATUS.error && message) {
+      setStatus(STATUS.idle);
+      setMessage('');
+    }
+
+    const validationMessage = validateEmailValue(nextRawValue.trim());
+
+    if (validationMessage) {
+      setIsEmailComplete(false);
+      setEmailError(validationMessage);
+    } else {
+      setIsEmailComplete(true);
+      setEmailError('');
+    }
+  }, [message, status, validateEmailValue]);
+
+  const handleEmailBlur = useCallback(async () => {
+    const trimmed = emailValue.trim();
+    const validationMessage = validateEmailValue(trimmed);
+
+    if (validationMessage) {
+      setEmailError(validationMessage);
+      setIsEmailComplete(false);
+      return;
+    }
+
+    if (!trimmed || trimmed === lastKnownEmailRef.current) {
+      return;
+    }
+
+    const didUpdate = await updateCheckoutEmail(trimmed);
+
+    if (didUpdate) {
+      lastKnownEmailRef.current = trimmed;
+    }
+  }, [emailValue, updateCheckoutEmail, validateEmailValue]);
+
+  const handlePaymentChange = useCallback(
+    async (event) => {
+      if (!event) {
+        return;
+      }
+
+      const nextEmail = event.value?.billingDetails?.email
+        || event.value?.payment_method?.billing_details?.email
+        || '';
+
+      if (!nextEmail || nextEmail === lastKnownEmailRef.current) {
+        return;
+      }
+
+      const didUpdate = await updateCheckoutEmail(nextEmail);
+
+      if (didUpdate) {
+        lastKnownEmailRef.current = nextEmail;
+      }
+
+      setEmailValue(nextEmail);
+      setIsEmailComplete(true);
+      setEmailError('');
+    },
+    [updateCheckoutEmail],
+  );
+
+  const persistPhoneMetadata = useCallback(
+    async (rawPhone) => {
+      const normalizedPhone = typeof rawPhone === 'string' ? rawPhone.trim() : '';
+      const targetPhone = normalizedPhone || null;
+
+      if (!sessionId) {
+        lastSavedPhoneRef.current = targetPhone;
+        return true;
+      }
+
+      setIsSavingPhone(true);
+
+      try {
+        const response = await fetch(buildApiUrl(`/checkout-session/${encodeURIComponent(sessionId)}/phone`), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ phoneNumber: normalizedPhone }),
+        });
+
+        if (!response.ok) {
+          const payload = await response.json().catch(() => null);
+          throw new Error(payload?.error || 'Unable to save phone number.');
+        }
+
+        lastSavedPhoneRef.current = targetPhone;
+        return true;
+      } catch (error) {
+        console.warn('Failed to persist checkout phone metadata.', error);
+        return false;
+      } finally {
+        setIsSavingPhone(false);
+      }
+    },
+    [buildApiUrl, sessionId],
+  );
+
+  const syncPhoneWithCheckout = useCallback(
+    async (rawPhone) => {
+      if (!checkout || typeof checkout.updatePhoneNumber !== 'function') {
+        return true;
+      }
+
+      const normalizedPhone = typeof rawPhone === 'string' ? rawPhone.trim() : '';
+      if (!normalizedPhone) {
+        return true;
+      }
+      const candidateValue = normalizedPhone || null;
+
+      const isCollectionDisabledError = (error) => {
+        if (!error) {
+          return false;
+        }
+
+        const message = String(error.message || error);
+        return /phone_number_collection\.enabled/i.test(message);
+      };
+
+      try {
+        await checkout.updatePhoneNumber({ phoneNumber: candidateValue });
+        return true;
+      } catch (firstError) {
+        if (isCollectionDisabledError(firstError)) {
+          return true;
+        }
+
+        try {
+          await checkout.updatePhoneNumber(candidateValue);
+          return true;
+        } catch (secondError) {
+          if (isCollectionDisabledError(secondError)) {
+            return true;
+          }
+
+          const combinedMessage = String(secondError?.message || firstError?.message || '');
+
+          if (!normalizedPhone && combinedMessage && /phone number/i.test(combinedMessage)) {
+            return true;
+          }
+
+          console.warn('Unable to sync phone number with checkout.', secondError || firstError);
+          return false;
+        }
+      }
+    },
+    [checkout],
+  );
+
+  useEffect(() => {
+    syncPhoneWithCheckoutRef.current = syncPhoneWithCheckout;
+  }, [syncPhoneWithCheckout]);
+
+  const handlePhoneChange = useCallback((event) => {
+    const nextRawValue = event?.target?.value ?? '';
+    setPhoneValue(nextRawValue);
+
+    if (phoneError) {
+      setPhoneError('');
+    }
+
+    if (status === STATUS.error && message) {
+      setStatus(STATUS.idle);
+      setMessage('');
+    }
+  }, [message, phoneError, status]);
+
+  const handlePhoneBlur = useCallback(async () => {
+    const trimmed = phoneValue.trim();
+    const targetPhone = trimmed || null;
+
+    if (targetPhone === lastSavedPhoneRef.current) {
+      return;
+    }
+
+    const didPersist = await persistPhoneMetadata(trimmed);
+
+    if (didPersist) {
+      if (trimmed) {
+        const didSync = await syncPhoneWithCheckout(trimmed);
+
+        if (!didSync) {
+          setPhoneError('Unable to sync phone number.');
+          return;
+        }
+      }
+
+      lastSavedPhoneRef.current = targetPhone;
+      setPhoneError('');
+    } else if (trimmed) {
+      setPhoneError('Unable to save phone number.');
+    } else {
+      lastSavedPhoneRef.current = null;
+      setPhoneError('');
+    }
+  }, [persistPhoneMetadata, phoneValue, syncPhoneWithCheckout]);
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -164,17 +425,61 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
       setStatus(STATUS.loading);
       setMessage('');
 
-      const validation = await validateEmail(email, checkout);
+      const trimmedEmail = emailValue.trim();
+      const emailValidationMessage = validateEmailValue(trimmedEmail);
 
-      if (!validation.isValid) {
-        setEmailError(validation.message || 'Email is not valid.');
+      if (emailValidationMessage) {
         setStatus(STATUS.error);
-        setMessage(validation.message || 'Email is not valid.');
+        setMessage(emailValidationMessage);
+        setEmailError(emailValidationMessage);
+        setIsEmailComplete(false);
         return;
       }
 
-      setEmail(validation.value || email);
-      setEmailError('');
+      if (trimmedEmail && trimmedEmail !== lastKnownEmailRef.current) {
+        const didPersistEmail = await updateCheckoutEmail(trimmedEmail);
+
+        if (didPersistEmail) {
+          lastKnownEmailRef.current = trimmedEmail;
+        }
+      }
+
+      if (!isShippingComplete) {
+        const shippingMessage = 'Enter your shipping address.';
+        setShippingError(shippingMessage);
+        setStatus(STATUS.error);
+        setMessage(shippingMessage);
+        return;
+      }
+
+      const nextPhone = phoneValue.trim();
+      const targetPhone = nextPhone || null;
+      const needsPhoneSync = targetPhone !== lastSavedPhoneRef.current;
+
+      if (needsPhoneSync) {
+        const didPersistPhone = await persistPhoneMetadata(nextPhone);
+
+        if (!didPersistPhone && nextPhone) {
+          setPhoneError('Unable to save phone number.');
+          setStatus(STATUS.error);
+          setMessage('Unable to save phone number.');
+          return;
+        }
+
+        if (nextPhone) {
+          const didSyncPhone = await syncPhoneWithCheckout(nextPhone);
+
+          if (!didSyncPhone) {
+            setPhoneError('Unable to sync phone number.');
+            setStatus(STATUS.error);
+            setMessage('Unable to sync phone number.');
+            return;
+          }
+        }
+
+        lastSavedPhoneRef.current = targetPhone;
+        setPhoneError('');
+      }
 
       const confirmResult = await checkout.confirm();
 
@@ -187,7 +492,7 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
       setStatus(STATUS.loading);
       setMessage('Redirecting to confirmation…');
     },
-    [checkout, email],
+    [checkout, emailValue, isShippingComplete, persistPhoneMetadata, phoneValue, updateCheckoutEmail, validateEmailValue],
   );
 
   if (checkoutStatus === 'loading') {
@@ -206,7 +511,7 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
   }
 
   return (
-    <form className="stripe-payment-form" onSubmit={handleSubmit}>
+    <form className="stripe-payment-form" onSubmit={handleSubmit} noValidate>
       {selectedOption ? (
         <div className="checkout-summary" aria-live="polite">
           <div className="checkout-summary__details">
@@ -248,36 +553,82 @@ function StripeCheckoutForm({ selectedOption, onBackToOptions }) {
         htmlFor="checkout-email"
         style={{ fontFamily: 'Lato, sans-serif' }}
       >
-        Email
+        Contact Email (Required)
       </label>
       <input
         id="checkout-email"
-        dir="ltr"
+        className={`stripe-input${emailError ? ' stripe-input-error' : ''}`}
         type="email"
+        name="email"
+        autoComplete="email"
         inputMode="email"
-        name="linkEmail"
-        className={`stripe-input p-Input-input p-Fieldset-input Input p-EmailField-input p-Input-input--textRight${
-          email.trim() ? '' : ' Input--empty'
-        }${emailError ? ' stripe-input-error' : ''}`}
-        autoComplete="billing email"
-        autoCapitalize="none"
-        data-lp-ignore="true"
-        aria-invalid={emailError ? 'true' : 'false'}
-        aria-describedby={emailError ? 'email-errors' : undefined}
-        aria-required="true"
-        value={email}
+        value={emailValue}
         onChange={handleEmailChange}
         onBlur={handleEmailBlur}
-        placeholder="Email"
         required
-        style={{ fontFamily: 'Lato, sans-serif' }}
+        aria-invalid={emailError ? 'true' : 'false'}
+        aria-describedby={emailError ? 'checkout-email-error' : undefined}
+        placeholder="you@example.com"
+        disabled={isProcessing}
       />
       {emailError ? (
-        <div id="email-errors" className="stripe-status-message stripe-status-error" role="alert">
+        <div id="checkout-email-error" className="stripe-status-message stripe-status-error" role="alert">
           {emailError}
         </div>
       ) : null}
-      <PaymentElement id="payment-element" options={{ layout: 'tabs' }} />
+      <label
+        className="stripe-input-label"
+        htmlFor="checkout-phone"
+        style={{ fontFamily: 'Lato, sans-serif' }}
+      >
+        Contact Phone (Optional)
+      </label>
+      <input
+        id="checkout-phone"
+        className={`stripe-input${phoneError ? ' stripe-input-error' : ''}`}
+        type="tel"
+        name="phone"
+        autoComplete="tel"
+        inputMode="tel"
+        value={phoneValue}
+        onChange={handlePhoneChange}
+        onBlur={handlePhoneBlur}
+        aria-invalid={phoneError ? 'true' : 'false'}
+        aria-describedby={phoneError ? 'checkout-phone-error' : undefined}
+        placeholder="(555) 555-1234"
+        disabled={isProcessing || isSavingPhone}
+      />
+      {phoneError ? (
+        <div id="checkout-phone-error" className="stripe-status-message stripe-status-error" role="alert">
+          {phoneError}
+        </div>
+      ) : null}
+      <label
+        className="stripe-input-label"
+        htmlFor="shipping-address-element"
+        style={{ fontFamily: 'Lato, sans-serif' }}
+      >
+        Shipping Information
+      </label>
+      <div
+        className={`stripe-address-element${shippingError ? ' stripe-input-error' : ''}`}
+        aria-live="polite"
+      >
+        <ShippingAddressElement
+          id="shipping-address-element"
+          onChange={handleShippingChange}
+        />
+      </div>
+      {shippingError ? (
+        <div id="shipping-errors" className="stripe-status-message stripe-status-error" role="alert">
+          {shippingError}
+        </div>
+      ) : null}
+      <PaymentElement
+        id="payment-element"
+        options={paymentElementOptions}
+        onChange={handlePaymentChange}
+      />
       <button
         type="submit"
         className="stripe-submit-button btn btn-primary btn-one-style"
@@ -313,6 +664,8 @@ StripeCheckoutForm.propTypes = {
     imageAlt: PropTypes.string,
   }),
   onBackToOptions: PropTypes.func,
+  sessionId: PropTypes.string,
+  apiBase: PropTypes.string,
 };
 
 export default StripeCheckoutForm;
